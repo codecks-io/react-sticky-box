@@ -1,0 +1,7 @@
+{
+  "stage": 0,
+  "ignore": [
+    "node_modules/"
+  ],
+  "loose": ["es6.modules", "es6.classes"]
+}
