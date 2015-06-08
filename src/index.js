@@ -1,34 +1,48 @@
 import React from "react";
 import getPrefix from "./get-prefix";
 
+function getScrollParent(node) {
+  let offsetParent = node;
+  while ((offsetParent = offsetParent.offsetParent)) {
+    const overflowYVal = getComputedStyle(offsetParent, null).getPropertyValue("overflow-y");
+    if (overflowYVal === "auto" || overflowYVal === "scroll") return offsetParent;
+  }
+  return window;
+}
+
 export default class OSBox {
   static displayName = "OSBox"
   static defaultProps = {initialCount: 0}
 
   componentDidMount() {
     this.node = React.findDOMNode(this);
-    this.offset = 0;
-    this.scrollY = 0;
     this.transformMethod = getPrefix("transform", this.node);
     if (!this.transformMethod) return;
+
+    this.offset = 0;
+    this.lastScrollY = 0;
+
     this.computedStyle = getComputedStyle(this.node, null);
     this.computedParentStyle = getComputedStyle(this.node.parentNode, null);
-    window.addEventListener("scroll", ::this.handleScroll);
-    window.addEventListener("mousewheel", ::this.handleScroll);
+    this.scrollPane = getScrollParent(this.node);
+
+    this.scrollPane.addEventListener("scroll", ::this.handleScroll);
+    this.scrollPane.addEventListener("mousewheel", ::this.handleScroll);
     this.handleScroll();
   }
 
   componentWillUnmount() {
     if (!this.transformMethod) return;
-    window.removeEventListener("scroll", ::this.handleScroll);
-    window.removeEventListener("mousewheel", ::this.handleScroll);
+    this.scrollPane.removeEventListener("scroll", ::this.handleScroll);
+    this.scrollPane.removeEventListener("mousewheel", ::this.handleScroll);
   }
 
   handleScroll() {
-    const scrollDelta = window.scrollY - this.scrollY;
+    const currentScrollY = this.scrollPane === window ? this.scrollPane.scrollY : this.scrollPane.scrollTop;
+    const scrollDelta = currentScrollY - this.lastScrollY;
     if (!scrollDelta) return;
 
-    this.scrollY = window.scrollY;
+    this.lastScrollY = currentScrollY;
 
     // TODO: reliably convert to pixels
 
@@ -42,51 +56,52 @@ export default class OSBox {
     const minTop = this.node.parentNode.offsetTop;
 
     let newOffset = null;
+    const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
 
     if (scrollDelta < 0) {
       // up
-      if (window.innerHeight > this.node.offsetHeight + verticalMargin) {
+      if (scrollPaneHeight > this.node.offsetHeight + verticalMargin) {
           // if node smaller than window
-        if (this.scrollY + this.offset < minTop + (this.node.offsetHeight + verticalMargin) - window.innerHeight) {
+        if (currentScrollY + this.offset < minTop + (this.node.offsetHeight + verticalMargin) - scrollPaneHeight) {
         // don't exceed the parentTop
           newOffset = 0;
         } else {
-          if (this.scrollY + window.innerHeight < minTop + this.offset + this.node.offsetHeight + verticalMargin) {
+          if (currentScrollY + scrollPaneHeight < minTop + this.offset + this.node.offsetHeight + verticalMargin) {
             // if bottom invisble
-            newOffset = this.scrollY - minTop + window.innerHeight - this.node.offsetHeight - verticalMargin;
+            newOffset = currentScrollY - minTop + scrollPaneHeight - this.node.offsetHeight - verticalMargin;
           }
         }
       } else {
         // if node bigger than window
-        if (this.scrollY < minTop) {
+        if (currentScrollY < minTop) {
         // don't exceed the parentTop
           newOffset = 0;
         } else {
-          if (this.scrollY < minTop + this.offset) {
-            newOffset = this.scrollY - minTop;
+          if (currentScrollY < minTop + this.offset) {
+            newOffset = currentScrollY - minTop;
           }
         }
       }
     } else if (scrollDelta > 0) {
       // down
-      if (window.innerHeight > this.node.offsetHeight + verticalMargin) {
+      if (scrollPaneHeight > this.node.offsetHeight + verticalMargin) {
         // if node smaller than window
-        if (this.scrollY + this.node.offsetHeight > minTop + this.node.parentNode.offsetHeight - verticalMargin) {
+        if (currentScrollY + this.node.offsetHeight > minTop + this.node.parentNode.offsetHeight - verticalMargin) {
           // don't exceed the parentBottom
           newOffset = this.node.parentNode.offsetHeight - verticalMargin - this.node.offsetHeight;
         } else {
-          if (this.scrollY > minTop + this.offset) {
-            newOffset = this.scrollY - minTop;
+          if (currentScrollY > minTop + this.offset) {
+            newOffset = currentScrollY - minTop;
           }
         }
       } else {
         // if node bigger than window
-        if (window.innerHeight + this.scrollY > minTop + this.node.parentNode.offsetHeight) {
+        if (scrollPaneHeight + currentScrollY > minTop + this.node.parentNode.offsetHeight) {
           // don't exceed the parentBottom
           newOffset = this.node.parentNode.offsetHeight - this.node.offsetHeight - verticalMargin;
         } else {
-          if (this.scrollY + window.innerHeight > minTop + this.offset + (this.node.offsetHeight + verticalMargin)) {
-            newOffset = this.scrollY - minTop + window.innerHeight - (this.node.offsetHeight + verticalMargin);
+          if (currentScrollY + scrollPaneHeight > minTop + this.offset + (this.node.offsetHeight + verticalMargin)) {
+            newOffset = currentScrollY - minTop + scrollPaneHeight - (this.node.offsetHeight + verticalMargin);
           }
         }
       }
