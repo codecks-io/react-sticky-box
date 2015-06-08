@@ -12,7 +12,14 @@ function getScrollParent(node) {
 
 export default class OSBox {
   static displayName = "OSBox"
-  static defaultProps = {initialCount: 0}
+
+  static propTypes = {
+    stickToTop: React.PropTypes.bool
+  }
+
+  static defaultProps = {
+    stickToTop: false
+  }
 
   componentDidMount() {
     this.node = React.findDOMNode(this);
@@ -52,7 +59,6 @@ export default class OSBox {
       parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10) +
       parseInt(this.computedParentStyle.getPropertyValue("padding-bottom"), 10);
 
-
     const minTop = this.node.parentNode.offsetTop;
 
     let newOffset = null;
@@ -62,13 +68,23 @@ export default class OSBox {
       // up
       if (scrollPaneHeight > this.node.offsetHeight + verticalMargin) {
         // if node smaller than window
-        if (currentScrollY + this.offset < minTop + (this.node.offsetHeight + verticalMargin) - scrollPaneHeight) {
-          // don't exceed the parentTop
-          newOffset = 0;
+        if (this.props.stickToTop) {
+          if (currentScrollY < minTop) {
+            newOffset = 0;
+          } else {
+            if (currentScrollY + this.node.offsetHeight < minTop + this.node.parentNode.offsetHeight - verticalMargin) {
+              newOffset = currentScrollY - minTop;
+            }
+          }
         } else {
-          if (currentScrollY + scrollPaneHeight < minTop + this.offset + this.node.offsetHeight + verticalMargin) {
-            // if bottom invisble
-            newOffset = currentScrollY - minTop + scrollPaneHeight - this.node.offsetHeight - verticalMargin;
+          if (currentScrollY + this.offset < minTop + (this.node.offsetHeight + verticalMargin) - scrollPaneHeight) {
+            // don't exceed the parentTop
+            newOffset = 0;
+          } else {
+            if (currentScrollY + scrollPaneHeight < minTop + this.offset + this.node.offsetHeight + verticalMargin) {
+              // if bottom invisble
+              newOffset = currentScrollY - minTop + scrollPaneHeight - this.node.offsetHeight - verticalMargin;
+            }
           }
         }
       } else {
@@ -113,8 +129,9 @@ export default class OSBox {
   }
 
   render() {
+    const {stickToTop, ...rest} = this.props;
     return (
-      <div {...this.props}/>
+      <div {...rest}/>
     );
   }
 }

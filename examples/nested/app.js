@@ -11,8 +11,8 @@ const page = (
     </div>
     <div className="content-container">
       <div className="content">
-        <OSBox className="content-sidebar">
-          {range(10).map(i =><p key={i}>Hi asd as dsa {i}</p>)}
+        <OSBox className="content-sidebar" stickToTop>
+          {range(10).map(i =><p key={i}>Sidebar Item {i}</p>)}
         </OSBox>
         <OSBox className="content-body">
           {range(20).map(i => <p key={i}>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -21,6 +21,9 @@ const page = (
   consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
   cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
   proident, sunt in culpa qui officia deserunt mollit anim id est laborum. {i}</p>)}
+        </OSBox>
+        <OSBox className="content-sidebar">
+          {range(10).map(i =><p key={i}>Sidebar Item {i}</p>)}
         </OSBox>
       </div>
     </div>
