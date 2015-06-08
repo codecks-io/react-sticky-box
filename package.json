@@ -1,5 +1,5 @@
 {
-  "name": "react-scroll-box",
+  "name": "react-sticky-box",
   "version": "0.3.0",
   "description": "Boxes that behave nicely while scrolling",
   "scripts": {
@@ -10,12 +10,14 @@
   },
   "keywords": [
     "react",
-    "scroll"
+    "scroll",
+    "sticky",
+    "fixed"
   ],
   "author": "Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/)",
   "license": "ISC",
   "main": "modules/index.js",
-  "repository": "danielberndt/react-scroll-box",
+  "repository": "danielberndt/react-sticky-box",
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
     "babel": "^5.5.5",

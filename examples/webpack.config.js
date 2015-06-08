@@ -37,7 +37,7 @@ module.exports = {
   resolve: {
     extensions: ["", ".js", ".jsx"],
     alias: {
-      "react-scroll-box": "../../src/index"
+      "react-sticky-box": "../../src/index"
     }
   },
   devServer: {
