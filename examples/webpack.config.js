@@ -1,16 +1,30 @@
 var path = require("path");
+var fs = require('fs');
 
 var srcDirs = [__dirname, path.join(__dirname, "..", "src")];
 
+function isDirectory(dir) {
+  return fs.lstatSync(dir).isDirectory();
+}
+
+var entries = fs.readdirSync(__dirname).reduce(function (entries, dir) {
+  var isDraft = dir.charAt(0) === '_';
+
+  if (!isDraft && isDirectory(path.join(__dirname, dir)))
+    entries[dir] = path.join(__dirname, dir, 'app.js');
+
+  return entries;
+}, {});
+
 module.exports = {
   context: __dirname,
-  entry: "./app.js",
+  entry: entries,
   output: {
-    filename: "bundle.js"
+    filename: '[name]/app.js',
   },
   module: {
     preLoaders: [
-      {test: /\.jsx?$/, loader: "eslint", include: srcDirs}
+      // {test: /\.jsx?$/, loader: "eslint", include: srcDirs}
     ],
     loaders: [
       {test: /\.jsx?$/, loader: "babel?cacheDirectory", include: srcDirs},
@@ -23,7 +37,7 @@ module.exports = {
   resolve: {
     extensions: ["", ".js", ".jsx"],
     alias: {
-      "react-scroll-box": "../src/index"
+      "react-scroll-box": "../../src/index"
     }
   },
   devServer: {
