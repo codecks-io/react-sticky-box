@@ -61,9 +61,9 @@ export default class OSBox {
     if (scrollDelta < 0) {
       // up
       if (scrollPaneHeight > this.node.offsetHeight + verticalMargin) {
-          // if node smaller than window
+        // if node smaller than window
         if (currentScrollY + this.offset < minTop + (this.node.offsetHeight + verticalMargin) - scrollPaneHeight) {
-        // don't exceed the parentTop
+          // don't exceed the parentTop
           newOffset = 0;
         } else {
           if (currentScrollY + scrollPaneHeight < minTop + this.offset + this.node.offsetHeight + verticalMargin) {
@@ -74,7 +74,7 @@ export default class OSBox {
       } else {
         // if node bigger than window
         if (currentScrollY < minTop) {
-        // don't exceed the parentTop
+          // don't exceed the parentTop
           newOffset = 0;
         } else {
           if (currentScrollY < minTop + this.offset) {
