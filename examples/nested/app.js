@@ -1,7 +1,7 @@
 require("./style.less");
 
 import React from "react";
-import StickyBox from "react-scroll-box";
+import StickyBox from "react-sticky-box";
 import range from "lodash.range";
 
 const page = (
