@@ -33,15 +33,17 @@ export default class OSBox {
     this.computedParentStyle = getComputedStyle(this.node.parentNode, null);
     this.scrollPane = getScrollParent(this.node);
 
-    this.scrollPane.addEventListener("scroll", ::this.handleScroll);
-    this.scrollPane.addEventListener("mousewheel", ::this.handleScroll);
+    this.thisBoundHandleScroll = ::this.handleScroll;
+
+    this.scrollPane.addEventListener("scroll", this.thisBoundHandleScroll);
+    this.scrollPane.addEventListener("mousewheel", this.thisBoundHandleScroll);
     this.handleScroll();
   }
 
   componentWillUnmount() {
     if (!this.transformMethod) return;
-    this.scrollPane.removeEventListener("scroll", ::this.handleScroll);
-    this.scrollPane.removeEventListener("mousewheel", ::this.handleScroll);
+    this.scrollPane.removeEventListener("scroll", this.thisBoundHandleScroll);
+    this.scrollPane.removeEventListener("mousewheel", this.thisBoundHandleScroll);
   }
 
   handleScroll() {
