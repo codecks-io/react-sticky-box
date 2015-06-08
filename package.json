@@ -12,9 +12,10 @@
     "react",
     "scroll"
   ],
-  "author": "Daniel Berndt",
+  "author": "Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/)",
   "license": "ISC",
   "main": "modules/index.js",
+  "repository": "danielberndt/react-scroll-box",
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
     "babel": "^5.5.5",
@@ -35,6 +36,6 @@
     "webpack-dev-server": "^1.9.0"
   },
   "peerDependencies": {
-    "react": ">= 0.13.0"
+    "react": ">=0.13.0"
   }
 }
