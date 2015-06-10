@@ -1,3 +1,3 @@
-# React Scroll Box
+# React Sticky Box
 
-Boxes that behave nicely while scrolling
+The code is pretty much done. Now I just need to find some time to document everything. So stay tuned!
