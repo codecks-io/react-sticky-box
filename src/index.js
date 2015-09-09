@@ -10,6 +10,15 @@ function getScrollParent(node) {
   return window;
 }
 
+function getTotalOffsetTopUntil(node, targetNode) {
+  let offsetParent = node, top = 0;
+  while (offsetParent && offsetParent !== targetNode) {
+    top += offsetParent.offsetTop;
+    offsetParent = offsetParent.offsetParent;
+  }
+  return top;
+}
+
 export default class OSBox {
   static displayName = "OSBox"
 
@@ -61,7 +70,7 @@ export default class OSBox {
       parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10) +
       parseInt(this.computedParentStyle.getPropertyValue("padding-bottom"), 10);
 
-    const minTop = this.node.parentNode.offsetTop;
+    var minTop = getTotalOffsetTopUntil(this.node.offsetParent, this.scrollPane);
 
     let newOffset = null;
     const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
