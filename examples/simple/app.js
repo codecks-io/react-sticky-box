@@ -1,6 +1,7 @@
 require("./style.less");
 
 import React from "react";
+import ReactDOM from "react-dom";
 import StickyBox from "react-sticky-box";
 import range from "lodash.range";
 
@@ -29,7 +30,7 @@ const page = (
 
 window.document.addEventListener("DOMContentLoaded", () => {
   const appEl = window.document.getElementById("app");
-  React.render(page, appEl);
+  ReactDOM.render(page, appEl);
 });
 
 

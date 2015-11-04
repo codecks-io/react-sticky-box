@@ -19,7 +19,7 @@ function getTotalOffsetTopUntil(node, targetNode) {
   return top;
 }
 
-export default class OSBox {
+export default class OSBox extends React.Component {
   static displayName = "OSBox"
 
   static propTypes = {
@@ -31,7 +31,7 @@ export default class OSBox {
   }
 
   componentDidMount() {
-    this.node = React.findDOMNode(this);
+    this.node = this.refs.container;
     this.transformMethod = getPrefix("transform", this.node);
     if (!this.transformMethod) return;
 
@@ -70,7 +70,7 @@ export default class OSBox {
       parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10) +
       parseInt(this.computedParentStyle.getPropertyValue("padding-bottom"), 10);
 
-    var minTop = getTotalOffsetTopUntil(this.node.offsetParent, this.scrollPane);
+    const minTop = getTotalOffsetTopUntil(this.node.offsetParent, this.scrollPane);
 
     let newOffset = null;
     const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
@@ -142,7 +142,7 @@ export default class OSBox {
   render() {
     const {stickToTop, ...rest} = this.props;
     return (
-      <div {...rest}/>
+      <div {...rest} ref="container"/>
     );
   }
 }

@@ -33,11 +33,12 @@
     "less-loader": "^2.2.0",
     "lodash.range": "^3.0.0",
     "postcss-loader": "^0.4.4",
+    "react-dom": "^0.14.2",
     "style-loader": "^0.12.3",
     "webpack": "^1.9.10",
     "webpack-dev-server": "^1.9.0"
   },
   "peerDependencies": {
-    "react": ">=0.13.0"
+    "react": "^0.14.0"
   }
 }
