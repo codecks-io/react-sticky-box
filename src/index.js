@@ -10,13 +10,10 @@ function getScrollParent(node) {
   return window;
 }
 
-function getTotalOffsetTopUntil(node, targetNode) {
-  let offsetParent = node, top = 0;
-  while (offsetParent && offsetParent !== targetNode) {
-    top += offsetParent.offsetTop;
-    offsetParent = offsetParent.offsetParent;
-  }
-  return top;
+function getTotalOffsetTop(node) {
+  if (node === window) return 0;
+  const docElem = document.documentElement;
+  return node.getBoundingClientRect().top + (window.pageYOffset || docElem.scrollTop) - (docElem.clientTop || 0);
 }
 
 export default class OSBox extends React.Component {
@@ -77,69 +74,41 @@ export default class OSBox extends React.Component {
       parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10) +
       parseInt(this.computedParentStyle.getPropertyValue("padding-bottom"), 10);
 
-    const minTop = getTotalOffsetTopUntil(this.node.offsetParent, this.scrollPane);
+    const nodeHeight = this.node.offsetHeight + verticalMargin;
 
-    let newOffset = null;
+    const parentOffsetTop = getTotalOffsetTop(this.node.parentNode);
+    const scrollPaneOffsetTop = getTotalOffsetTop(this.scrollPane) + window.scrollY;
+
+    let newOffset = this.offset;
     const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
 
-    if (scrollDelta < 0) {
-      // up
-      if (scrollPaneHeight > this.node.offsetHeight + verticalMargin) {
-        // if node smaller than window
+
+    if (scrollDelta < 0) { // up
+      if (scrollPaneHeight > nodeHeight) { // if node smaller than window
         if (this.props.stickToTop) {
-          if (currentScrollY < minTop) {
-            newOffset = 0;
-          } else {
-            if (currentScrollY + this.node.offsetHeight < minTop + this.node.parentNode.offsetHeight - verticalMargin) {
-              newOffset = currentScrollY - minTop;
-            }
-          }
+          newOffset = scrollPaneOffsetTop - parentOffsetTop;
         } else {
-          if (currentScrollY + this.offset < minTop + (this.node.offsetHeight + verticalMargin) - scrollPaneHeight) {
-            // don't exceed the parentTop
-            newOffset = 0;
-          } else {
-            if (currentScrollY + scrollPaneHeight < minTop + this.offset + this.node.offsetHeight + verticalMargin) {
-              // if bottom invisble
-              newOffset = currentScrollY - minTop + scrollPaneHeight - this.node.offsetHeight - verticalMargin;
-            }
+          if (scrollPaneOffsetTop + scrollPaneHeight < parentOffsetTop + this.offset + nodeHeight) {
+            newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
           }
         }
-      } else {
-        // if node bigger than window
-        if (currentScrollY < minTop) {
-          // don't exceed the parentTop
-          newOffset = 0;
-        } else {
-          if (currentScrollY < minTop + this.offset) {
-            newOffset = currentScrollY - minTop;
-          }
+      } else { // if node taller than window
+        if (this.offset + parentOffsetTop > scrollPaneOffsetTop) {
+          newOffset = scrollPaneOffsetTop - parentOffsetTop;
         }
       }
-    } else if (scrollDelta > 0) {
-      // down
-      if (scrollPaneHeight > this.node.offsetHeight + verticalMargin) {
-        // if node smaller than window
-        if (currentScrollY + this.node.offsetHeight > minTop + this.node.parentNode.offsetHeight - verticalMargin) {
-          // don't exceed the parentBottom
-          newOffset = this.node.parentNode.offsetHeight - verticalMargin - this.node.offsetHeight;
-        } else {
-          if (currentScrollY > minTop + this.offset) {
-            newOffset = currentScrollY - minTop;
-          }
+    } else if (scrollDelta > 0) { // down
+      if (scrollPaneHeight > nodeHeight) { // if node smaller than window
+        if (this.props.stickToTop || parentOffsetTop + this.offset < scrollPaneOffsetTop) {
+          newOffset = scrollPaneOffsetTop - parentOffsetTop;
         }
-      } else {
-        // if node bigger than window
-        if (scrollPaneHeight + currentScrollY > minTop + this.node.parentNode.offsetHeight) {
-          // don't exceed the parentBottom
-          newOffset = this.node.parentNode.offsetHeight - this.node.offsetHeight - verticalMargin;
-        } else {
-          if (currentScrollY + scrollPaneHeight > minTop + this.offset + (this.node.offsetHeight + verticalMargin)) {
-            newOffset = currentScrollY - minTop + scrollPaneHeight - (this.node.offsetHeight + verticalMargin);
-          }
+      } else { // if node taller than window
+        if (this.offset + nodeHeight - scrollPaneOffsetTop < scrollPaneHeight - parentOffsetTop) {
+          newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
         }
       }
     }
+    newOffset = Math.max(Math.min(newOffset, this.node.parentNode.offsetHeight - nodeHeight), 0);
     if (newOffset !== null && this.offset !== newOffset) {
       this.node.style[this.transformMethod] = `translate3d(0, ${newOffset}px,0)`;
       this.offset = newOffset;
