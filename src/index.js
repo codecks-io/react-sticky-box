@@ -37,6 +37,7 @@ export default class OSBox extends React.Component {
 
     this.offset = 0;
     this.lastScrollY = 0;
+    this.lastParentHeight = 0;
 
     this.computedStyle = getComputedStyle(this.node, null);
     this.computedParentStyle = getComputedStyle(this.node.parentNode, null);
@@ -49,6 +50,11 @@ export default class OSBox extends React.Component {
     this.handleScroll();
   }
 
+  componentDidUpdate() {
+    // in case the parentNode has changed its height
+    this.handleScroll();
+  }
+
   componentWillUnmount() {
     if (!this.transformMethod) return;
     this.scrollPane.removeEventListener("scroll", this.thisBoundHandleScroll);
@@ -58,9 +64,10 @@ export default class OSBox extends React.Component {
   handleScroll() {
     const currentScrollY = this.scrollPane === window ? this.scrollPane.scrollY : this.scrollPane.scrollTop;
     const scrollDelta = currentScrollY - this.lastScrollY;
-    if (!scrollDelta) return;
+    if (!scrollDelta && this.node.parentNode.offsetHeight === this.lastParentHeight) return;
 
     this.lastScrollY = currentScrollY;
+    this.lastParentHeight = this.node.parentNode.offsetHeight;
 
     // TODO: reliably convert to pixels
 
