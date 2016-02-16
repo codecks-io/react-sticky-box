@@ -64,10 +64,6 @@ export default class OSBox extends React.Component {
     const scrollDelta = currentScrollY - this.lastScrollY;
     if (!scrollDelta && this.node.parentNode.offsetHeight === this.lastParentHeight && this.lastChildHeight === this.node.offsetHeight) return;
 
-    this.lastScrollY = currentScrollY;
-    this.lastParentHeight = this.node.parentNode.offsetHeight;
-    this.lastChildHeight = this.node.offsetHeight;
-
     const verticalMargin =
       parseInt(this.computedStyle.getPropertyValue("margin-top"), 10) +
       parseInt(this.computedStyle.getPropertyValue("margin-bottom"), 10) +
@@ -83,7 +79,7 @@ export default class OSBox extends React.Component {
     const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
 
 
-    if (scrollDelta < 0) { // up
+    if (scrollDelta < 0 || this.lastChildHeight < this.node.offsetHeight) { // up
       if (scrollPaneHeight > nodeHeight) { // if node smaller than window
         if (this.props.stickToTop) {
           newOffset = scrollPaneOffsetTop - parentOffsetTop;
@@ -97,7 +93,7 @@ export default class OSBox extends React.Component {
           newOffset = scrollPaneOffsetTop - parentOffsetTop;
         }
       }
-    } else if (scrollDelta > 0) { // down
+    } else if (scrollDelta > 0 || this.lastChildHeight > this.node.offsetHeight) { // down
       if (scrollPaneHeight > nodeHeight) { // if node smaller than window
         if (this.props.stickToTop || parentOffsetTop + this.offset < scrollPaneOffsetTop) {
           newOffset = scrollPaneOffsetTop - parentOffsetTop;
@@ -113,6 +109,9 @@ export default class OSBox extends React.Component {
       this.node.style[this.transformMethod] = `translate3d(0, ${newOffset}px,0)`;
       this.offset = newOffset;
     }
+    this.lastScrollY = currentScrollY;
+    this.lastParentHeight = this.node.parentNode.offsetHeight;
+    this.lastChildHeight = this.node.offsetHeight;
   }
 
   render() {
