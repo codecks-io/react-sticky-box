@@ -16,6 +16,12 @@ function getTotalOffsetTop(node) {
   return node.getBoundingClientRect().top + (window.pageYOffset || docElem.scrollTop) - (docElem.clientTop || 0);
 }
 
+const allBoxes = {};
+let nextBoxId = 1;
+export function updateAll() {
+  Object.keys(allBoxes).forEach(b => allBoxes[b].handleScroll());
+}
+
 export default class OSBox extends React.Component {
   static displayName = "OSBox"
 
@@ -47,6 +53,8 @@ export default class OSBox extends React.Component {
     this.scrollPane.addEventListener("scroll", this.thisBoundHandleScroll);
     this.scrollPane.addEventListener("mousewheel", this.thisBoundHandleScroll);
     this.handleScroll();
+    this.myId = nextBoxId++;
+    allBoxes[this.myId] = this;
   }
 
   componentDidUpdate() {
@@ -58,6 +66,7 @@ export default class OSBox extends React.Component {
     if (!this.transformMethod) return;
     this.scrollPane.removeEventListener("scroll", this.thisBoundHandleScroll);
     this.scrollPane.removeEventListener("mousewheel", this.thisBoundHandleScroll);
+    delete allBoxes[this.myId];
   }
 
   handleScroll() {
