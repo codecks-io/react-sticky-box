@@ -98,12 +98,11 @@ export default class OSBox extends React.Component {
     let newOffset = this.offset;
     const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
 
-    if (scrollDelta < 0 && !force) { // up
+    if (scrollDelta < 0) { // up
       if (scrollPaneHeight > nodeHeight) { // if node smaller than window
         if (this.props.stickToTop) {
           newOffset = scrollPaneOffsetTop - parentOffsetTop;
         } else {
-          if (this.props.debug) console.log(scrollPaneOffsetTop + scrollPaneHeight, parentOffsetTop + this.offset + nodeHeight);
           if (scrollPaneOffsetTop + scrollPaneHeight < parentOffsetTop + this.offset + nodeHeight) {
             newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
           }
@@ -112,7 +111,6 @@ export default class OSBox extends React.Component {
         if (this.props.stickToBottom) {
           if (this.offset + parentOffsetTop > scrollPaneOffsetTop) {
             newOffset = scrollPaneOffsetTop - parentOffsetTop;
-            // newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
           }
         } else {
           if (this.offset + parentOffsetTop > scrollPaneOffsetTop) {
@@ -143,7 +141,6 @@ export default class OSBox extends React.Component {
     if (newOffset !== null && this.offset !== newOffset) {
       this.node.style[this.transformMethod] = `translate3d(0, ${newOffset}px,0)`;
       this.offset = newOffset;
-      // for the duration of this tick, keep the information that we just scrolled and don't need no re-calculation
     }
     this.lastScrollY = currentScrollY;
     this.lastParentHeight = this.node.parentNode.offsetHeight;
