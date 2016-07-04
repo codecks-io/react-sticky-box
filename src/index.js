@@ -42,37 +42,47 @@ export default class OSBox extends React.Component {
     this.lastScrollY = 0;
     this.lastParentHeight = 0;
     this.lastChildHeight = 0;
-    this.firstPass = true;
 
     this.computedStyle = getComputedStyle(this.node, null);
     this.computedParentStyle = getComputedStyle(this.node.parentNode, null);
     this.scrollPane = getScrollParent(this.node);
 
-    this.thisBoundHandleScroll = ::this.handleScroll;
-
-    this.scrollPane.addEventListener("scroll", this.thisBoundHandleScroll);
-    this.scrollPane.addEventListener("mousewheel", this.thisBoundHandleScroll);
-    this.handleScroll();
+    this.scrollPane.addEventListener("scroll", this.handleScroll);
+    this.scrollPane.addEventListener("mousewheel", this.handleScroll);
+    window.addEventListener("resize", this.handleScroll);
+    this.handleScroll({force: true});
     this.myId = nextBoxId++;
     allBoxes[this.myId] = this;
-  }
-
-  componentDidUpdate() {
-    // in case the parentNode has changed its height
-    this.handleScroll();
+    this.setupMutationObserver();
   }
 
   componentWillUnmount() {
     if (!this.transformMethod) return;
-    this.scrollPane.removeEventListener("scroll", this.thisBoundHandleScroll);
-    this.scrollPane.removeEventListener("mousewheel", this.thisBoundHandleScroll);
+    this.scrollPane.removeEventListener("scroll", this.handleScroll);
+    this.scrollPane.removeEventListener("mousewheel", this.handleScroll);
+    window.removeEventListener("resize", this.handleScroll);
     delete allBoxes[this.myId];
+    if (this.observer) this.observer.disconnect();
   }
 
-  handleScroll() {
+  setupMutationObserver() {
+    if (window.MutationObserver) {
+      this.observer = new MutationObserver(() => this.handleScroll({force: true}));
+      this.observer.observe(
+        this.scrollPane === window ? document.body : this.scrollPane,
+        {subtree: true, attributes: true, childList: true, attributeFilter: ["style", "class"]}
+      );
+    }
+  }
+
+  handleScroll = ({force} = {}) => {
+    if (this.calculatedScrollPosThisTick) return;
     const currentScrollY = this.scrollPane === window ? this.scrollPane.scrollY : this.scrollPane.scrollTop;
     const scrollDelta = currentScrollY - this.lastScrollY;
-    if (!scrollDelta && this.node.parentNode.offsetHeight === this.lastParentHeight && this.lastChildHeight === this.node.offsetHeight) return;
+    if (!scrollDelta && !force) return;
+
+    this.calculatedScrollPosThisTick = true;
+    setTimeout(() => {this.calculatedScrollPosThisTick = false; });
 
     const verticalMargin =
       parseInt(this.computedStyle.getPropertyValue("margin-top"), 10) +
@@ -88,26 +98,29 @@ export default class OSBox extends React.Component {
     let newOffset = this.offset;
     const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
 
-
-    if ((scrollDelta < 0 || this.lastChildHeight < this.node.offsetHeight) && !this.firstPass) { // up
+    if (scrollDelta < 0 && !force) { // up
       if (scrollPaneHeight > nodeHeight) { // if node smaller than window
         if (this.props.stickToTop) {
           newOffset = scrollPaneOffsetTop - parentOffsetTop;
         } else {
+          if (this.props.debug) console.log(scrollPaneOffsetTop + scrollPaneHeight, parentOffsetTop + this.offset + nodeHeight);
           if (scrollPaneOffsetTop + scrollPaneHeight < parentOffsetTop + this.offset + nodeHeight) {
             newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
           }
         }
       } else { // if node taller than window
         if (this.props.stickToBottom) {
-          newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
+          if (this.offset + parentOffsetTop > scrollPaneOffsetTop) {
+            newOffset = scrollPaneOffsetTop - parentOffsetTop;
+            // newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
+          }
         } else {
           if (this.offset + parentOffsetTop > scrollPaneOffsetTop) {
             newOffset = scrollPaneOffsetTop - parentOffsetTop;
           }
         }
       }
-    } else if (scrollDelta > 0 || this.lastChildHeight > this.node.offsetHeight || this.firstPass && this.props.stickToBottom) { // down
+    } else if (scrollDelta > 0 || force) { // down
       if (scrollPaneHeight > nodeHeight) { // if node smaller than window
         if (this.props.stickToBottom) {
           newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
@@ -130,11 +143,11 @@ export default class OSBox extends React.Component {
     if (newOffset !== null && this.offset !== newOffset) {
       this.node.style[this.transformMethod] = `translate3d(0, ${newOffset}px,0)`;
       this.offset = newOffset;
+      // for the duration of this tick, keep the information that we just scrolled and don't need no re-calculation
     }
     this.lastScrollY = currentScrollY;
     this.lastParentHeight = this.node.parentNode.offsetHeight;
     this.lastChildHeight = this.node.offsetHeight;
-    this.firstPass = false;
   }
 
   render() {

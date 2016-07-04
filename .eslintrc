@@ -26,7 +26,6 @@
     "no-var": 1,
     "react/jsx-uses-vars": 2,
     "react/jsx-uses-react": 2,
-    "react/display-name": 1,
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
     "react/self-closing-comp": 1,
