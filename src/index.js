@@ -72,6 +72,7 @@ export default class OSBox extends React.Component {
     window.removeEventListener("resize", this.handleScroll);
     delete allBoxes[this.myId];
     if (this.observer) this.observer.disconnect();
+    this.removeFixedListener();
   }
 
   setupMutationObserver() {
@@ -158,18 +159,41 @@ export default class OSBox extends React.Component {
         this.node.style.top = `${scrollPaneOffsetTop}px`;
         this.node.style.position = "fixed";
         this.node.style[this.transformMethod] = `translate3d(0, 0px, 0)`;
+        this.addFixedListener();
       } else if (targetMode === "fixedBottom") {
         this.node.style.top = `${scrollPaneOffsetTop}px`;
         this.node.style.position = "fixed";
         this.node.style[this.transformMethod] = `translate3d(0, ${viewPortHeight - nodeHeight + verticalMargin}px, 0)`;
+        this.addFixedListener();
       } else if (targetMode === "absolute") {
         this.node.style.top = "0";
         this.node.style.position = "absolute";
         this.node.style[this.transformMethod] = `translate3d(0, ${nextOffset + parentTop - scrollPaneOffsetTop + parentPaddingTop + scrollY - window.scrollY}px, 0)`;
         this.offset = nextOffset;
+        this.removeFixedListener();
       }
       this.mode = targetMode;
     }
+  }
+
+  // we need to add this listener since fixed positioned element won't propagate their mousewheel event to the scroll pane below
+  // (at least if the scrollpane is not the window)
+  addFixedListener() {
+    if (!this.hasFixedListener && this.scrollPane !== window) {
+      this.node.addEventListener("mousewheel", this.handleMouseWheelOnFixed);
+      this.hasFixedListener = true;
+    }
+  }
+
+  removeFixedListener() {
+    if (this.hasFixedListener && this.scrollPane !== window) {
+      this.node.removeEventListener("mousewheel", this.handleMouseWheelOnFixed);
+      this.hasFixedListener = false;
+    }
+  }
+
+  handleMouseWheelOnFixed = (e) => {
+    this.scrollPane.scrollTop += e.deltaY;
   }
 
   render() {
