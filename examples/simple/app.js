@@ -32,10 +32,12 @@ class Page extends React.Component {
       consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
       cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
       proident, sunt in culpa qui officia deserunt mollit anim id est laborum. {i}</p>)}</div>
-          <StickyBox className="sticky" width={250} bottom>
-            <button onClick={() => this.setState({paragraphCount: 1})}>1 Para</button>
-            <button onClick={() => this.setState({paragraphCount: 20})}>20 Paras</button>
-            {range(3).map(i => <p key={i}>bla sidenode {i}</p>)}
+          <StickyBox className="sticky" width="measure">
+            <div style={{width: 200 + paragraphCount * 10}}>
+              <button onClick={() => this.setState({paragraphCount: 1})}>1 Para</button>
+              <button onClick={() => this.setState({paragraphCount: 20})}>20 Paras</button>
+              {range(3).map(i => <p key={i}>bla sidenode {i}</p>)}
+            </div>
           </StickyBox>
         </div>
         <div>{range(20).map(i => <p key={i}>Stuff below {i}</p>)}</div>

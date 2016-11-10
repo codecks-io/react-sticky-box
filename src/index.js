@@ -26,11 +26,15 @@ export function updateAll() {
 export default class OSBox extends React.Component {
 
   static propTypes = {
-    width: React.PropTypes.number.isRequired
+    width: React.PropTypes.oneOfType([
+      React.PropTypes.number,
+      React.PropTypes.oneOf(["measure"])
+    ]).isRequired
   }
 
   state = {
-    height: 1
+    height: 1,
+    measuredWidth: null
   }
 
   componentDidMount() {
@@ -51,11 +55,13 @@ export default class OSBox extends React.Component {
     this.myId = nextBoxId++;
     allBoxes[this.myId] = this;
 
-    const compStyle = getComputedStyle(this.node);
-    const reducePadding = compStyle.getPropertyValue("box-sizing") === "content-box" ? (
-      parseInt(compStyle.getPropertyValue("padding-left"), 10) + parseInt(compStyle.getPropertyValue("padding-right"), 10)
-    ) : 0;
-    this.node.style.width = `${this.props.width - reducePadding}px`;
+    if (this.props.width !== "measure") {
+      const compStyle = getComputedStyle(this.node);
+      const reducePadding = compStyle.getPropertyValue("box-sizing") === "content-box" ? (
+        parseInt(compStyle.getPropertyValue("padding-left"), 10) + parseInt(compStyle.getPropertyValue("padding-right"), 10)
+      ) : 0;
+      this.node.style.width = `${this.props.width - reducePadding}px`;
+    }
     this.setupMutationObserver();
   }
 
@@ -83,6 +89,8 @@ export default class OSBox extends React.Component {
     this.calculatedScrollPosThisTick = true;
     setTimeout(() => {this.calculatedScrollPosThisTick = false; });
 
+    const {bottom} = this.props;
+
     const containerHeight = this.node.parentNode.parentNode.offsetHeight;
     const parentPaddingTop = parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10);
     const parentPaddingBottom = parseInt(this.computedParentStyle.getPropertyValue("padding-bottom"), 10);
@@ -101,19 +109,27 @@ export default class OSBox extends React.Component {
     this.latestScrollY = scrollY;
     let targetMode = this.mode;
     let nextOffset = this.offset;
-    if (scrollPaneOffsetTopWithScroll < parentTop + parentPaddingTop) { // if can't go further up, don't go further up!
+    if (!bottom && scrollPaneOffsetTopWithScroll < parentTop + parentPaddingTop) { // if can't go further up, don't go further up!
       targetMode = "absolute";
       nextOffset = 0;
-    } else if (parentTop + containerHeight - Math.min(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) <= scrollPaneOffsetTopWithScroll) { // if can't go further down, don't go further down!
+    } else if (!bottom && parentTop + containerHeight - Math.min(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) <= scrollPaneOffsetTopWithScroll) { // if can't go further down, don't go further down!
       nextOffset = containerHeight - nodeHeight;
       targetMode = "absolute";
+    } else if (bottom && containerHeight + parentTop - parentPaddingBottom < scrollPaneOffsetTopWithScroll + viewPortHeight) { // if can't go further down, don't go further down!
+      nextOffset = containerHeight - nodeHeight;
+      targetMode = "absolute";
+    } else if (bottom && Math.max(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) - parentTop + scrollPaneOffsetTopWithScroll < nodeHeight) { // if can't go further up, don't go further up!
+      targetMode = "absolute";
+      nextOffset = 0;
     } else {
       if (this.mode === "notSet") {
         targetMode = "absolute";
-        nextOffset = scrollPaneOffsetTopWithScroll - parentTop;
+        nextOffset = bottom
+          ? scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop + viewPortHeight - nodeHeight + verticalMargin
+          : scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop;
       } else {
         if (viewPortHeight >= nodeHeight) { // if node smaller than window
-          targetMode = "fixedTop";
+          targetMode = bottom ? "fixedBottom" : "fixedTop";
         } else if (scrollDelta < 0) { // scroll up and node taller than window
           if (this.mode === "fixedBottom") {
             targetMode = "absolute";
@@ -158,13 +174,23 @@ export default class OSBox extends React.Component {
 
   render() {
     const {width, children, ...rest} = this.props;
-    const {height} = this.state;
-    return (
-      <div style={{width, height}}>
-        <Measure whiteList={["height"]} onMeasure={({height: h}) => this.setState({height: h})}>
-          <div ref={n => {this.node = n; }} {...rest}>{children}</div>
-        </Measure>
-      </div>
-    );
+    const {height, measuredWidth} = this.state;
+    if (width === "measure") {
+      return (
+        <div style={measuredWidth === null ? {} : {width: measuredWidth, height}}>
+          <Measure whiteList={["height", "width"]} onMeasure={({height: h, width: w}) => this.setState({height: h, measuredWidth: w})}>
+            <div ref={n => {this.node = n; }} {...rest}>{children}</div>
+          </Measure>
+        </div>
+      );
+    } else {
+      return (
+        <div style={{width, height}}>
+          <Measure whiteList={["height"]} onMeasure={({height: h}) => this.setState({height: h})}>
+            <div ref={n => {this.node = n; }} {...rest}>{children}</div>
+          </Measure>
+        </div>
+      );
+    }
   }
 }

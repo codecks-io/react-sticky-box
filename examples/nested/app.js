@@ -32,7 +32,7 @@ const page = (
     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
     proident, sunt in culpa qui officia deserunt mollit anim id est laborum. {i}</p>)}
           </div>
-          <StickyBox className="content-sidebar" width={200} bottom>
+          <StickyBox className="content-sidebar" width={200}>
             {range(5).map(i =><p key={i}>Sidebar Item {i}</p>)}
           </StickyBox>
         </div>
