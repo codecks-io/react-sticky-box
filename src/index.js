@@ -23,7 +23,7 @@ export function updateAll() {
   Object.keys(allBoxes).forEach(b => allBoxes[b].handleScroll());
 }
 
-export default class OSBox extends React.Component {
+export default class StickyBox extends React.Component {
 
   static propTypes = {
     width: React.PropTypes.oneOfType([
@@ -54,16 +54,15 @@ export default class OSBox extends React.Component {
     this.handleScroll();
     this.myId = nextBoxId++;
     allBoxes[this.myId] = this;
+    this.setWidth();
 
-    if (this.props.width !== "measure") {
-      const compStyle = getComputedStyle(this.node);
-      const reducePadding = compStyle.getPropertyValue("box-sizing") === "content-box" ? (
-        parseInt(compStyle.getPropertyValue("padding-left"), 10) + parseInt(compStyle.getPropertyValue("padding-right"), 10)
-      ) : 0;
-      this.node.style.width = `${this.props.width - reducePadding}px`;
-    }
     this.setupMutationObserver();
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.width !== this.props.width) this.setWidth();
+  }
+
 
   componentWillUnmount() {
     if (!this.transformMethod) return;
@@ -73,6 +72,16 @@ export default class OSBox extends React.Component {
     delete allBoxes[this.myId];
     if (this.observer) this.observer.disconnect();
     this.removeFixedListener();
+  }
+
+  setWidth() {
+    if (this.props.width !== "measure") {
+      const compStyle = getComputedStyle(this.node);
+      const reducePadding = compStyle.getPropertyValue("box-sizing") === "content-box" ? (
+        parseInt(compStyle.getPropertyValue("padding-left"), 10) + parseInt(compStyle.getPropertyValue("padding-right"), 10)
+      ) : 0;
+      this.node.style.width = `${this.props.width - reducePadding}px`;
+    }
   }
 
   setupMutationObserver() {
@@ -109,11 +118,15 @@ export default class OSBox extends React.Component {
 
     this.latestScrollY = scrollY;
     let targetMode = this.mode;
-    let nextOffset = this.offset;
-    if (!bottom && scrollPaneOffsetTopWithScroll < parentTop + parentPaddingTop) { // if can't go further up, don't go further up!
+    let nextOffset = this.plainOffset;
+    if (!bottom && scrollPaneOffsetTopWithScroll <= parentTop + parentPaddingTop) { // if can't go further up, don't go further up!
       targetMode = "absolute";
       nextOffset = 0;
-    } else if (!bottom && parentTop + containerHeight - Math.min(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) <= scrollPaneOffsetTopWithScroll) { // if can't go further down, don't go further down!
+    } else if (
+      !bottom
+      && parentTop + containerHeight - Math.min(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) <= scrollPaneOffsetTopWithScroll
+      && scrollPaneOffsetTopWithScroll !== parentTop + parentPaddingTop + scrollY
+    ) { // if can't go further down, don't go further down!
       nextOffset = containerHeight - nodeHeight;
       targetMode = "absolute";
     } else if (bottom && containerHeight + parentTop - parentPaddingBottom < scrollPaneOffsetTopWithScroll + viewPortHeight) { // if can't go further down, don't go further down!
@@ -127,7 +140,7 @@ export default class OSBox extends React.Component {
         targetMode = "absolute";
         nextOffset = bottom
           ? scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop + viewPortHeight - nodeHeight + verticalMargin
-          : scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop;
+          : viewPortHeight >= nodeHeight ? scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop : 0;
       } else {
         if (viewPortHeight >= nodeHeight) { // if node smaller than window
           targetMode = bottom ? "fixedBottom" : "fixedTop";
@@ -136,7 +149,7 @@ export default class OSBox extends React.Component {
             targetMode = "absolute";
             nextOffset = scrollPaneOffsetTopWithScroll - parentTop - nodeHeight + viewPortHeight + parentPaddingBottom;
           } else if (this.mode === "absolute") {
-            if (scrollPaneOffsetTopWithScroll <= parentTop + this.offset + parentPaddingTop) {
+            if (scrollPaneOffsetTopWithScroll <= parentTop + this.plainOffset + parentPaddingTop) {
               targetMode = "fixedTop";
             }
           }
@@ -145,7 +158,7 @@ export default class OSBox extends React.Component {
             targetMode = "absolute";
             nextOffset = scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop;
           } else if (this.mode === "absolute") {
-            if (scrollPaneOffsetTopWithScroll + viewPortHeight >= nodeHeight + parentTop + this.offset - parentPaddingBottom) {
+            if (scrollPaneOffsetTopWithScroll + viewPortHeight >= nodeHeight + parentTop + this.plainOffset - parentPaddingBottom) {
               targetMode = "fixedBottom";
             }
           }
@@ -153,7 +166,19 @@ export default class OSBox extends React.Component {
       }
     }
 
-    if (targetMode !== this.mode || targetMode === "absolute" && this.offset !== nextOffset) {
+    let nextBottom = 0;
+    if (targetMode === "absolute") {
+      this.plainOffset = nextOffset;
+      nextOffset = nextOffset + this.node.parentNode.parentNode.offsetTop + parentPaddingTop;
+    } else if (targetMode === "fixedBottom") {
+      nextBottom = viewPortHeight - nodeHeight + verticalMargin;
+    }
+
+    if (
+      targetMode !== this.mode
+      || targetMode === "absolute" && this.offset !== nextOffset
+      || targetMode === "fixedBottom" && this.lastBottom !== nextBottom
+    ) {
       // console.log("targetMode", targetMode);
       if (targetMode === "fixedTop") {
         this.node.style.top = `${scrollPaneOffsetTop}px`;
@@ -163,12 +188,13 @@ export default class OSBox extends React.Component {
       } else if (targetMode === "fixedBottom") {
         this.node.style.top = `${scrollPaneOffsetTop}px`;
         this.node.style.position = "fixed";
-        this.node.style[this.transformMethod] = `translate3d(0, ${viewPortHeight - nodeHeight + verticalMargin}px, 0)`;
+        this.node.style[this.transformMethod] = `translate3d(0, ${nextBottom}px, 0)`;
+        this.lastBottom = nextBottom;
         this.addFixedListener();
       } else if (targetMode === "absolute") {
         this.node.style.top = "0";
         this.node.style.position = "absolute";
-        this.node.style[this.transformMethod] = `translate3d(0, ${nextOffset + parentTop - scrollPaneOffsetTop + parentPaddingTop + scrollY - window.scrollY}px, 0)`;
+        this.node.style[this.transformMethod] = `translate3d(0, ${nextOffset}px, 0)`;
         this.offset = nextOffset;
         this.removeFixedListener();
       }
