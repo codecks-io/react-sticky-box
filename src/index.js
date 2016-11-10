@@ -1,5 +1,6 @@
 import React from "react";
 import getPrefix from "./get-prefix";
+import Measure from "react-measure";
 
 function getScrollParent(node) {
   let offsetParent = node;
@@ -23,36 +24,38 @@ export function updateAll() {
 }
 
 export default class OSBox extends React.Component {
-  static displayName = "OSBox"
 
   static propTypes = {
-    stickToTop: React.PropTypes.bool
+    width: React.PropTypes.number.isRequired
   }
 
-  static defaultProps = {
-    stickToTop: false
+  state = {
+    height: 1
   }
 
   componentDidMount() {
-    this.node = this.refs.container;
     this.transformMethod = getPrefix("transform", this.node);
     if (!this.transformMethod) return;
 
-    this.offset = 0;
-    this.lastScrollY = 0;
-    this.lastParentHeight = 0;
-    this.lastChildHeight = 0;
+    this.latestScrollY = 999999;
+    this.mode = "notSet";
 
-    this.computedStyle = getComputedStyle(this.node, null);
-    this.computedParentStyle = getComputedStyle(this.node.parentNode, null);
+    this.computedParentStyle = getComputedStyle(this.node.parentNode.parentNode, null);
     this.scrollPane = getScrollParent(this.node);
 
     this.scrollPane.addEventListener("scroll", this.handleScroll);
     this.scrollPane.addEventListener("mousewheel", this.handleScroll);
     window.addEventListener("resize", this.handleScroll);
-    this.handleScroll({force: true});
+
+    this.handleScroll();
     this.myId = nextBoxId++;
     allBoxes[this.myId] = this;
+
+    const compStyle = getComputedStyle(this.node);
+    const reducePadding = compStyle.getPropertyValue("box-sizing") === "content-box" ? (
+      parseInt(compStyle.getPropertyValue("padding-left"), 10) + parseInt(compStyle.getPropertyValue("padding-right"), 10)
+    ) : 0;
+    this.node.style.width = `${this.props.width - reducePadding}px`;
     this.setupMutationObserver();
   }
 
@@ -67,90 +70,99 @@ export default class OSBox extends React.Component {
 
   setupMutationObserver() {
     if (window.MutationObserver) {
-      this.observer = new MutationObserver(() => this.handleScroll({force: true}));
+      this.observer = new MutationObserver(() => this.handleScroll());
       this.observer.observe(
-        this.scrollPane === window ? document.body : this.scrollPane,
+        this.node.parentNode.parentNode,
         {subtree: true, attributes: true, childList: true, attributeFilter: ["style", "class"]}
       );
     }
   }
 
-  handleScroll = ({force} = {}) => {
+  handleScroll = () => {
     if (this.calculatedScrollPosThisTick) return;
-    const currentScrollY = this.scrollPane === window ? this.scrollPane.scrollY : this.scrollPane.scrollTop;
-    const scrollDelta = currentScrollY - this.lastScrollY;
-    if (!scrollDelta && !force) return;
-
     this.calculatedScrollPosThisTick = true;
     setTimeout(() => {this.calculatedScrollPosThisTick = false; });
 
-    const verticalMargin =
-      parseInt(this.computedStyle.getPropertyValue("margin-top"), 10) +
-      parseInt(this.computedStyle.getPropertyValue("margin-bottom"), 10) +
-      parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10) +
-      parseInt(this.computedParentStyle.getPropertyValue("padding-bottom"), 10);
+    const containerHeight = this.node.parentNode.parentNode.offsetHeight;
+    const parentPaddingTop = parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10);
+    const parentPaddingBottom = parseInt(this.computedParentStyle.getPropertyValue("padding-bottom"), 10);
 
-    const nodeHeight = this.node.offsetHeight + verticalMargin;
+    const verticalMargin = parentPaddingTop + parentPaddingBottom;
 
-    const parentOffsetTop = getTotalOffsetTop(this.node.parentNode);
+    const scrollY = window.scrollY;
+    const scrollDelta = scrollY - this.latestScrollY;
+
+    const nodeHeight = this.node.getBoundingClientRect().height + verticalMargin;
+    const parentTop = getTotalOffsetTop(this.node.parentNode.parentNode);
+    const viewPortHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
     const scrollPaneOffsetTop = getTotalOffsetTop(this.scrollPane) + window.scrollY;
 
-    let newOffset = this.offset;
-    const scrollPaneHeight = this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
+    this.latestScrollY = scrollY;
+    let targetMode = this.mode;
+    let nextOffset = this.offset;
+    if (scrollPaneOffsetTop < parentTop + parentPaddingTop) { // if can't go further up, don't go further up!
+      targetMode = "absolute";
+      nextOffset = 0;
+    } else if (parentTop + containerHeight - Math.min(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) <= scrollPaneOffsetTop) { // if can't go further down, don't go further down!
+      nextOffset = containerHeight - nodeHeight;
+      targetMode = "absolute";
+    } else {
+      if (this.mode === "notSet") {
+        targetMode = "absolute";
+        nextOffset = scrollPaneOffsetTop - parentTop;
+      } else {
+        if (viewPortHeight >= nodeHeight) { // if node smaller than window
+          targetMode = "fixedTop";
+        } else if (scrollDelta < 0) { // scroll up and node taller than window
+          if (this.mode === "fixedBottom") {
+            targetMode = "absolute";
+            nextOffset = scrollPaneOffsetTop - parentTop - nodeHeight + viewPortHeight + parentPaddingBottom;
+          } else if (this.mode === "absolute") {
+            if (scrollPaneOffsetTop <= parentTop + this.offset + parentPaddingTop) {
+              targetMode = "fixedTop";
+            }
+          }
+        } else if (scrollDelta > 0) { // scroll down and node taller than window
+          if (this.mode === "fixedTop") {
+            targetMode = "absolute";
+            nextOffset = scrollPaneOffsetTop - parentTop - parentPaddingTop;
+          } else if (this.mode === "absolute") {
+            if (scrollPaneOffsetTop + viewPortHeight >= nodeHeight + parentTop + this.offset - parentPaddingBottom) {
+              targetMode = "fixedBottom";
+            }
+          }
+        }
+      }
+    }
 
-    if (scrollDelta < 0) { // up
-      if (scrollPaneHeight > nodeHeight) { // if node smaller than window
-        if (this.props.stickToTop) {
-          newOffset = scrollPaneOffsetTop - parentOffsetTop;
-        } else {
-          if (scrollPaneOffsetTop + scrollPaneHeight < parentOffsetTop + this.offset + nodeHeight) {
-            newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
-          }
-        }
-      } else { // if node taller than window
-        if (this.props.stickToBottom) {
-          if (this.offset + parentOffsetTop > scrollPaneOffsetTop) {
-            newOffset = scrollPaneOffsetTop - parentOffsetTop;
-          }
-        } else {
-          if (this.offset + parentOffsetTop > scrollPaneOffsetTop) {
-            newOffset = scrollPaneOffsetTop - parentOffsetTop;
-          }
-        }
+    if (targetMode !== this.mode || targetMode === "absolute" && this.offset !== nextOffset) {
+      if (targetMode === "fixedTop") {
+        this.node.style.top = 0;
+        this.node.style.position = "fixed";
+        this.node.style[this.transformMethod] = `translate3d(0, 0px, 0)`;
+      } else if (targetMode === "fixedBottom") {
+        this.node.style.top = 0;
+        this.node.style.position = "fixed";
+        this.node.style[this.transformMethod] = `translate3d(0, ${viewPortHeight - nodeHeight + verticalMargin}px, 0)`;
+      } else if (targetMode === "absolute") {
+        this.node.style.top = `${parentPaddingTop}px`;
+        this.node.style.position = "absolute";
+        this.node.style[this.transformMethod] = `translate3d(0, ${nextOffset + parentTop}px, 0)`;
+        this.offset = nextOffset;
       }
-    } else if (scrollDelta > 0 || force) { // down
-      if (scrollPaneHeight > nodeHeight) { // if node smaller than window
-        if (this.props.stickToBottom) {
-          newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
-        } else {
-          if (this.props.stickToTop || parentOffsetTop + this.offset < scrollPaneOffsetTop) {
-            newOffset = scrollPaneOffsetTop - parentOffsetTop;
-          }
-        }
-      } else { // if node taller than window
-        if (this.props.stickToBottom) {
-          newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
-        } else {
-          if (this.offset + nodeHeight - scrollPaneOffsetTop < scrollPaneHeight - parentOffsetTop) {
-            newOffset = scrollPaneOffsetTop - parentOffsetTop + scrollPaneHeight - nodeHeight;
-          }
-        }
-      }
+      this.mode = targetMode;
     }
-    newOffset = Math.max(Math.min(newOffset, this.node.parentNode.offsetHeight - nodeHeight), 0);
-    if (newOffset !== null && this.offset !== newOffset) {
-      this.node.style[this.transformMethod] = `translate3d(0, ${newOffset}px,0)`;
-      this.offset = newOffset;
-    }
-    this.lastScrollY = currentScrollY;
-    this.lastParentHeight = this.node.parentNode.offsetHeight;
-    this.lastChildHeight = this.node.offsetHeight;
   }
 
   render() {
-    const {stickToTop, ...rest} = this.props;
+    const {width, children, ...rest} = this.props;
+    const {height} = this.state;
     return (
-      <div {...rest} ref="container"/>
+      <div style={{width, height}}>
+        <Measure whiteList={["height"]} onMeasure={({height: h}) => this.setState({height: h})}>
+          <div ref={n => {this.node = n; }} {...rest}>{children}</div>
+        </Measure>
+      </div>
     );
   }
 }
