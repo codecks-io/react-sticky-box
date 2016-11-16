@@ -57,6 +57,11 @@ export default class StickyBox extends React.Component {
     this.setWidth();
 
     this.setupMutationObserver();
+    this.rafCb = () => {
+      this.handleScroll({quickCheck: true});
+      this.rafId = window.requestAnimationFrame(this.rafCb);
+    };
+    if (window.requestAnimationFrame) this.rafId = window.requestAnimationFrame(this.rafCb);
   }
 
   componentDidUpdate(prevProps) {
@@ -72,6 +77,7 @@ export default class StickyBox extends React.Component {
     delete allBoxes[this.myId];
     if (this.observer) this.observer.disconnect();
     this.removeFixedListener();
+    if (this.rafId) window.cancelAnimationFrame(this.rafId);
   }
 
   setWidth() {
@@ -94,8 +100,12 @@ export default class StickyBox extends React.Component {
     }
   }
 
-  handleScroll = () => {
+  handleScroll = ({quickCheck} = {}) => {
     if (this.calculatedScrollPosThisTick) return;
+
+    const scrollY = this.scrollPane === window ? this.scrollPane.scrollY : this.scrollPane.scrollTop;
+    if (quickCheck && scrollY === this.latestScrollY) return;
+
     this.calculatedScrollPosThisTick = true;
     setTimeout(() => {this.calculatedScrollPosThisTick = false; });
 
@@ -107,8 +117,8 @@ export default class StickyBox extends React.Component {
 
     const verticalMargin = parentPaddingTop + parentPaddingBottom;
 
-    const scrollY = this.scrollPane === window ? this.scrollPane.scrollY : this.scrollPane.scrollTop;
     const scrollDelta = scrollY - this.latestScrollY;
+    this.latestScrollY = scrollY;
 
     const nodeHeight = this.node.getBoundingClientRect().height + verticalMargin;
     const parentTop = getTotalOffsetTop(this.node.parentNode.parentNode);
@@ -116,7 +126,6 @@ export default class StickyBox extends React.Component {
     const scrollPaneOffsetTop = getTotalOffsetTop(this.scrollPane);
     const scrollPaneOffsetTopWithScroll = scrollPaneOffsetTop + window.scrollY;
 
-    this.latestScrollY = scrollY;
     let targetMode = this.mode;
     let nextOffset = this.plainOffset;
     if (!bottom && scrollPaneOffsetTopWithScroll <= parentTop + parentPaddingTop) { // if can't go further up, don't go further up!
