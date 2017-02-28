@@ -16,6 +16,18 @@ var entries = fs.readdirSync(__dirname).reduce(function (entries, dir) {
   return entries;
 }, {});
 
+const postCssLoaderObj = {
+  loader: 'postcss-loader',
+  options: {
+    plugins: function () {
+      return [
+        require('csswring'),
+        require('autoprefixer')
+      ];
+    }
+  }
+}
+
 module.exports = {
   context: __dirname,
   entry: entries,
@@ -23,19 +35,26 @@ module.exports = {
     filename: '[name]/app.js',
   },
   module: {
-    preLoaders: [
-      // {test: /\.jsx?$/, loader: "eslint", include: srcDirs}
-    ],
-    loaders: [
-      {test: /\.jsx?$/, loader: "babel?cacheDirectory", include: srcDirs},
-      {test: /\.less$/, loader: "style!css!postcss!less", include: srcDirs},
-      {test: /\.css$/, loader: "style!css!postcss", include: srcDirs}
+    rules: [
+      {test: /\.jsx?$/, loader: "babel-loader?cacheDirectory", include: srcDirs},
+      {
+        test: /\.less$/,
+        use: [
+          "style-loader", "css-loader", postCssLoaderObj, "less-loader"
+        ],
+        include: srcDirs
+      }, {
+        test: /\.css$/,
+        use: [
+          "style-loader", "css-loader", postCssLoaderObj
+        ],
+        include: srcDirs
+      },
     ]
   },
   devtool: "eval",
-  postcss: [require("autoprefixer-core"), require("csswring")],
   resolve: {
-    extensions: ["", ".js", ".jsx"],
+    extensions: [".js", ".jsx"],
     alias: {
       "react-sticky-box": "../../src/index"
     }

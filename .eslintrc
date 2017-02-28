@@ -19,19 +19,16 @@
     "eol-last": 1,
     "no-trailing-spaces": 1,
     "space-before-function-paren": [1, "never"],
-    "space-after-keywords": [1, "always"],
     "space-before-blocks": [1, "always"],
-    "space-in-brackets": [1, "never"],
     "space-in-parens": [1, "never"],
+    "object-curly-spacing": [2, "never"],
     "no-var": 1,
     "react/jsx-uses-vars": 2,
     "react/jsx-uses-react": 2,
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
     "react/self-closing-comp": 1,
-    "react/wrap-multilines": 1,
     "react/no-unknown-property": 2,
-    "react/jsx-no-undef": 2,
-    "react/jsx-quotes": [1, "double"]
+    "react/jsx-no-undef": 2
   }
 }
