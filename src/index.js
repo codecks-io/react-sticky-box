@@ -1,6 +1,7 @@
 import React from "react";
 import getPrefix from "./get-prefix";
 import Measure from "react-measure";
+import ResizeObserver from 'resize-observer-polyfill';
 
 function getScrollParent(node) {
   let offsetParent = node;
@@ -47,21 +48,17 @@ export default class StickyBox extends React.Component {
     this.computedParentStyle = getComputedStyle(this.node.parentNode.parentNode, null);
     this.scrollPane = getScrollParent(this.node);
 
+
     this.scrollPane.addEventListener("scroll", this.handleScroll);
     this.scrollPane.addEventListener("mousewheel", this.handleScroll);
-    window.addEventListener("resize", this.handleScroll);
+    this.ro = new ResizeObserver(this.handleScroll);
+    this.ro.observe(this.node.parentNode.parentNode);
 
     this.handleScroll();
     this.myId = nextBoxId++;
     allBoxes[this.myId] = this;
     this.setWidth();
 
-    this.setupMutationObserver();
-    this.rafCb = () => {
-      this.handleScroll({quickCheck: true});
-      this.rafId = window.requestAnimationFrame(this.rafCb);
-    };
-    if (window.requestAnimationFrame) this.rafId = window.requestAnimationFrame(this.rafCb);
   }
 
   componentDidUpdate(prevProps) {
@@ -71,13 +68,12 @@ export default class StickyBox extends React.Component {
 
   componentWillUnmount() {
     if (!this.transformMethod) return;
+    delete allBoxes[this.myId];
+    this.removeFixedListener();
+
     this.scrollPane.removeEventListener("scroll", this.handleScroll);
     this.scrollPane.removeEventListener("mousewheel", this.handleScroll);
-    window.removeEventListener("resize", this.handleScroll);
-    delete allBoxes[this.myId];
-    if (this.observer) this.observer.disconnect();
-    this.removeFixedListener();
-    if (this.rafId) window.cancelAnimationFrame(this.rafId);
+    this.ro.disconnect();
   }
 
   setWidth() {
@@ -87,16 +83,6 @@ export default class StickyBox extends React.Component {
         parseInt(compStyle.getPropertyValue("padding-left"), 10) + parseInt(compStyle.getPropertyValue("padding-right"), 10)
       ) : 0;
       this.node.style.width = `${this.props.width - reducePadding}px`;
-    }
-  }
-
-  setupMutationObserver() {
-    if (window.MutationObserver) {
-      this.observer = new MutationObserver(() => this.handleScroll());
-      this.observer.observe(
-        this.node.parentNode.parentNode,
-        {subtree: true, attributes: true, childList: true, attributeFilter: ["style", "class"]}
-      );
     }
   }
 
