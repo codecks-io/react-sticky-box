@@ -53,6 +53,7 @@ export default class StickyBox extends React.Component {
     this.scrollPane.addEventListener("mousewheel", this.handleScroll);
     this.ro = new ResizeObserver(this.handleScroll);
     this.ro.observe(this.node.parentNode.parentNode);
+    this.ro.observe(this.node);
 
     this.handleScroll();
     this.myId = nextBoxId++;
