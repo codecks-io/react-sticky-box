@@ -218,7 +218,7 @@ export default class StickyBox extends React.Component {
   }
 
   render() {
-    const {width, children, ...rest} = this.props;
+    const {width, children, bottom: _, ...rest} = this.props;
     const {height, measuredWidth} = this.state;
     if (width === "measure") {
       return (
