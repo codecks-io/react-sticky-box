@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import getPrefix from "./get-prefix";
 import Measure from "react-measure";
 import ResizeObserver from 'resize-observer-polyfill';
@@ -27,9 +28,9 @@ export function updateAll() {
 export default class StickyBox extends React.Component {
 
   static propTypes = {
-    width: React.PropTypes.oneOfType([
-      React.PropTypes.number,
-      React.PropTypes.oneOf(["measure"])
+    width: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.oneOf(["measure"])
     ]).isRequired
   }
 
