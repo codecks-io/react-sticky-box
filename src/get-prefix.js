@@ -10,6 +10,8 @@ export default function getPrefix(prop, node) {
     if (tryPrefix in node.style) {
       prefixed = tryPrefix;
       return true;
+    } else {
+      return false;
     }
   });
 

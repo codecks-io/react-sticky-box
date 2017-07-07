@@ -4,8 +4,13 @@
   "description": "Boxes that behave nicely while scrolling",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "examples": "webpack-dev-server --config examples/webpack.config.js",
-    "build": "eslint src examples && babel src --out-dir modules",
+    "build": "npm run lint && npm run prettier && npm run build-es && npm run build-cjs && npm run build-pure-es",
+    "lint": "eslint src",
+    "prettier": "prettier-eslint --write src/**/*.js",
+    "build-es": "rollup --config --format es --output dist/react-sticky.es.js",
+    "build-pure-es": "rollup --config --environment PURE:true --format es --output dist/react-sticky.esnext.js",
+    "build-cjs": "rollup --config --format cjs --output dist/react-sticky.cjs.js",
+    "precommit": "lint-staged",
     "prepublish": "npm run build"
   },
   "keywords": [
@@ -16,38 +21,49 @@
   ],
   "author": "Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/)",
   "license": "ISC",
-  "main": "modules/index.js",
+  "main": "dist/react-sticky.cjs.js",
+  "module": "dist/react-sticky.es.js",
   "repository": "danielberndt/react-sticky-box",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
-    "autoprefixer": "^6.7.6",
-    "babel-cli": "^6.23.0",
-    "babel-core": "^6.23.1",
-    "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.3.2",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-react": "^6.22.0",
-    "babel-preset-stage-1": "^6.5.0",
-    "css-loader": "^0.26.2",
-    "csswring": "^5.1.1",
-    "eslint": "^3.16.1",
-    "eslint-loader": "^1.6.3",
-    "eslint-plugin-react": "^6.10.0",
-    "less": "^2.5.1",
-    "less-loader": "^2.2.0",
-    "lodash.range": "^3.0.0",
-    "normalize.css": "^5.0.0",
-    "postcss-loader": "^1.3.2",
-    "react-dom": "^15.4.2",
-    "style-loader": "^0.13.2",
-    "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.1"
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.6",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^4.1.1",
+    "eslint-config-react-app": "^1.0.5",
+    "eslint-plugin-flowtype": "^2.33.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-react": "^7.0.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.1",
+    "prettier-eslint-cli": "^4.1.1",
+    "rollup": "^0.43.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0"
   },
   "dependencies": {
+    "babel-runtime": "^6.0.0",
     "prop-types": "^15.5.10",
     "react-measure": "^1.4.5",
     "resize-observer-polyfill": "^1.3.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier-eslint --write",
+      "git add"
+    ]
   }
 }

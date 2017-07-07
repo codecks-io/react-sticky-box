@@ -17,6 +17,12 @@ We know lots of pages with sticky navigations. But what happens if the navigatio
 </SomeContainer>
 ```
 
+## Advanced usage
+
+use an almost no-overhead-es2017 version of the library:
+
+`import StickyBox from "react-sticky-box/dist/react-sticky.esnext.js"`
+
 ## Changelog
 
 ### 0.4 -> 0.5
