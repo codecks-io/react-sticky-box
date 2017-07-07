@@ -7,11 +7,8 @@ import ResizeObserver from "resize-observer-polyfill";
 function getScrollParent(node) {
   let offsetParent = node;
   while ((offsetParent = offsetParent.offsetParent)) {
-    const overflowYVal = getComputedStyle(offsetParent, null).getPropertyValue(
-      "overflow-y"
-    );
-    if (overflowYVal === "auto" || overflowYVal === "scroll")
-      return offsetParent;
+    const overflowYVal = getComputedStyle(offsetParent, null).getPropertyValue("overflow-y");
+    if (overflowYVal === "auto" || overflowYVal === "scroll") return offsetParent;
   }
   return window;
 }
@@ -26,21 +23,14 @@ function getTotalOffsetTop(node) {
   );
 }
 
-const allBoxes = {};
-let nextBoxId = 1;
-export function updateAll() {
-  Object.keys(allBoxes).forEach(b => allBoxes[b].handleScroll());
-}
-
 export default class StickyBox extends React.Component {
   static propTypes = {
-    width: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(["measure"])])
-      .isRequired
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(["measure"])]).isRequired,
   };
 
   state = {
     height: 1,
-    measuredWidth: null
+    measuredWidth: null,
   };
 
   componentDidMount() {
@@ -50,10 +40,7 @@ export default class StickyBox extends React.Component {
     this.latestScrollY = 999999;
     this.mode = "notSet";
 
-    this.computedParentStyle = getComputedStyle(
-      this.node.parentNode.parentNode,
-      null
-    );
+    this.computedParentStyle = getComputedStyle(this.node.parentNode.parentNode, null);
     this.scrollPane = getScrollParent(this.node);
 
     this.scrollPane.addEventListener("scroll", this.handleScroll);
@@ -63,8 +50,6 @@ export default class StickyBox extends React.Component {
     this.ro.observe(this.node);
 
     this.handleScroll();
-    this.myId = nextBoxId++;
-    allBoxes[this.myId] = this;
     this.setWidth();
   }
 
@@ -74,7 +59,6 @@ export default class StickyBox extends React.Component {
 
   componentWillUnmount() {
     if (!this.transformMethod) return;
-    delete allBoxes[this.myId];
     this.removeFixedListener();
 
     this.scrollPane.removeEventListener("scroll", this.handleScroll);
@@ -94,13 +78,11 @@ export default class StickyBox extends React.Component {
     }
   }
 
-  handleScroll = ({ quickCheck } = {}) => {
+  handleScroll = ({quickCheck} = {}) => {
     if (this.calculatedScrollPosThisTick) return;
 
     const scrollY =
-      this.scrollPane === window
-        ? this.scrollPane.scrollY
-        : this.scrollPane.scrollTop;
+      this.scrollPane === window ? this.scrollPane.scrollY : this.scrollPane.scrollTop;
     if (quickCheck && scrollY === this.latestScrollY) return;
 
     this.calculatedScrollPosThisTick = true;
@@ -108,13 +90,10 @@ export default class StickyBox extends React.Component {
       this.calculatedScrollPosThisTick = false;
     });
 
-    const { bottom } = this.props;
+    const {bottom} = this.props;
 
     const containerHeight = this.node.parentNode.parentNode.offsetHeight;
-    const parentPaddingTop = parseInt(
-      this.computedParentStyle.getPropertyValue("padding-top"),
-      10
-    );
+    const parentPaddingTop = parseInt(this.computedParentStyle.getPropertyValue("padding-top"), 10);
     const parentPaddingBottom = parseInt(
       this.computedParentStyle.getPropertyValue("padding-bottom"),
       10
@@ -125,22 +104,16 @@ export default class StickyBox extends React.Component {
     const scrollDelta = scrollY - this.latestScrollY;
     this.latestScrollY = scrollY;
 
-    const nodeHeight =
-      this.node.getBoundingClientRect().height + verticalMargin;
+    const nodeHeight = this.node.getBoundingClientRect().height + verticalMargin;
     const parentTop = getTotalOffsetTop(this.node.parentNode.parentNode);
     const viewPortHeight =
-      this.scrollPane === window
-        ? window.innerHeight
-        : this.scrollPane.offsetHeight;
+      this.scrollPane === window ? window.innerHeight : this.scrollPane.offsetHeight;
     const scrollPaneOffsetTop = getTotalOffsetTop(this.scrollPane);
     const scrollPaneOffsetTopWithScroll = scrollPaneOffsetTop + window.scrollY;
 
     let targetMode = this.mode;
     let nextOffset = this.plainOffset;
-    if (
-      !bottom &&
-      scrollPaneOffsetTopWithScroll <= parentTop + parentPaddingTop
-    ) {
+    if (!bottom && scrollPaneOffsetTopWithScroll <= parentTop + parentPaddingTop) {
       // if can't go further up, don't go further up!
       targetMode = "absolute";
       nextOffset = 0;
@@ -148,10 +121,7 @@ export default class StickyBox extends React.Component {
       !bottom &&
       parentTop +
         containerHeight -
-        Math.min(
-          viewPortHeight + parentPaddingBottom,
-          nodeHeight - parentPaddingTop
-        ) <=
+        Math.min(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) <=
         scrollPaneOffsetTopWithScroll &&
       scrollPaneOffsetTopWithScroll !== parentTop + parentPaddingTop + scrollY
     ) {
@@ -168,10 +138,7 @@ export default class StickyBox extends React.Component {
       targetMode = "absolute";
     } else if (
       bottom &&
-      Math.max(
-        viewPortHeight + parentPaddingBottom,
-        nodeHeight - parentPaddingTop
-      ) -
+      Math.max(viewPortHeight + parentPaddingBottom, nodeHeight - parentPaddingTop) -
         parentTop +
         scrollPaneOffsetTopWithScroll <
         nodeHeight
@@ -207,10 +174,7 @@ export default class StickyBox extends React.Component {
               viewPortHeight +
               parentPaddingBottom;
           } else if (this.mode === "absolute") {
-            if (
-              scrollPaneOffsetTopWithScroll <=
-              parentTop + this.plainOffset + parentPaddingTop
-            ) {
+            if (scrollPaneOffsetTopWithScroll <= parentTop + this.plainOffset + parentPaddingTop) {
               targetMode = "fixedTop";
             }
           }
@@ -218,8 +182,7 @@ export default class StickyBox extends React.Component {
           // scroll down and node taller than window
           if (this.mode === "fixedTop") {
             targetMode = "absolute";
-            nextOffset =
-              scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop;
+            nextOffset = scrollPaneOffsetTopWithScroll - parentTop - parentPaddingTop;
           } else if (this.mode === "absolute") {
             if (
               scrollPaneOffsetTopWithScroll + viewPortHeight >=
@@ -235,10 +198,7 @@ export default class StickyBox extends React.Component {
     let nextBottom = 0;
     if (targetMode === "absolute") {
       this.plainOffset = nextOffset;
-      nextOffset =
-        nextOffset +
-        this.node.parentNode.parentNode.offsetTop +
-        parentPaddingTop;
+      nextOffset = nextOffset + this.node.parentNode.parentNode.offsetTop + parentPaddingTop;
     } else if (targetMode === "fixedBottom") {
       nextBottom = viewPortHeight - nodeHeight + verticalMargin;
     }
@@ -257,17 +217,13 @@ export default class StickyBox extends React.Component {
       } else if (targetMode === "fixedBottom") {
         this.node.style.top = `${scrollPaneOffsetTop}px`;
         this.node.style.position = "fixed";
-        this.node.style[
-          this.transformMethod
-        ] = `translate3d(0, ${nextBottom}px, 0)`;
+        this.node.style[this.transformMethod] = `translate3d(0, ${nextBottom}px, 0)`;
         this.lastBottom = nextBottom;
         this.addFixedListener();
       } else if (targetMode === "absolute") {
         this.node.style.top = "0";
         this.node.style.position = "absolute";
-        this.node.style[
-          this.transformMethod
-        ] = `translate3d(0, ${nextOffset}px, 0)`;
+        this.node.style[this.transformMethod] = `translate3d(0, ${nextOffset}px, 0)`;
         this.offset = nextOffset;
         this.removeFixedListener();
       }
@@ -296,17 +252,14 @@ export default class StickyBox extends React.Component {
   };
 
   render() {
-    const { width, children, bottom: _, ...rest } = this.props;
-    const { height, measuredWidth } = this.state;
+    const {width, children, bottom: _, ...rest} = this.props;
+    const {height, measuredWidth} = this.state;
     if (width === "measure") {
       return (
-        <div
-          style={measuredWidth === null ? {} : { width: measuredWidth, height }}
-        >
+        <div style={measuredWidth === null ? {} : {width: measuredWidth, height}}>
           <Measure
             whiteList={["height", "width"]}
-            onMeasure={({ height: h, width: w }) =>
-              this.setState({ height: h, measuredWidth: w })}
+            onMeasure={({height: h, width: w}) => this.setState({height: h, measuredWidth: w})}
           >
             <div
               ref={n => {
@@ -321,11 +274,8 @@ export default class StickyBox extends React.Component {
       );
     } else {
       return (
-        <div style={{ width, height }}>
-          <Measure
-            whiteList={["height"]}
-            onMeasure={({ height: h }) => this.setState({ height: h })}
-          >
+        <div style={{width, height}}>
+          <Measure whiteList={["height"]} onMeasure={({height: h}) => this.setState({height: h})}>
             <div
               ref={n => {
                 this.node = n;
