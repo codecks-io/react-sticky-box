@@ -1,66 +1,60 @@
-var path = require("path");
-var fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
-var srcDirs = [__dirname, path.join(__dirname, "..", "src")];
+const srcDirs = [path.join(__dirname, "..", "src")];
+const srcDir = path.join(__dirname, "src");
 
-function isDirectory(dir) {
-  return fs.lstatSync(dir).isDirectory();
-}
-
-var entries = fs.readdirSync(__dirname).reduce(function (entries, dir) {
-  var isDraft = dir.charAt(0) === '_';
-
-  if (!isDraft && isDirectory(path.join(__dirname, dir)))
-    entries[dir] = path.join(__dirname, dir, 'app.js');
-
-  return entries;
-}, {});
-
-const postCssLoaderObj = {
-  loader: 'postcss-loader',
-  options: {
-    plugins: function () {
-      return [
-        require('csswring'),
-        require('autoprefixer')
-      ];
-    }
-  }
-}
+const isDirectory = dir => fs.lstatSync(dir).isDirectory();
+const entries = fs
+  .readdirSync(srcDir)
+  .filter(dir => dir.charAt(0) !== "_")
+  .filter(dir => isDirectory(path.join(srcDir, dir)))
+  .reduce((memo, dir) => {
+    srcDirs.push(path.join(srcDir, dir));
+    memo[dir] = path.join(srcDir, dir, "app.js");
+    return memo;
+  }, {});
 
 module.exports = {
-  context: __dirname,
   entry: entries,
   output: {
-    filename: '[name]/app.js',
+    filename: "[name]/app.js"
   },
   module: {
     rules: [
-      {test: /\.jsx?$/, loader: "babel-loader?cacheDirectory", include: srcDirs},
       {
-        test: /\.less$/,
-        use: [
-          "style-loader", "css-loader", postCssLoaderObj, "less-loader"
-        ],
-        include: srcDirs
-      }, {
-        test: /\.css$/,
-        use: [
-          "style-loader", "css-loader", postCssLoaderObj
-        ],
+        test: /\.jsx?$/,
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true,
+          presets: ["react", "es2015"],
+          plugins: [
+            "transform-class-properties",
+            "transform-object-rest-spread"
+          ]
+        },
         include: srcDirs
       },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+        include: srcDirs
+      }
     ]
   },
-  devtool: "eval",
+  devtool: "cheap-module-source-map",
   resolve: {
+    modules: [
+      path.join(__dirname, "node_modules"),
+      path.join(__dirname, "..", "node_modules")
+    ],
     extensions: [".js", ".jsx"],
     alias: {
-      "react-sticky-box": "../../src/index"
+      "react-sticky-box": path.join(__dirname, "..", "src")
     }
   },
   devServer: {
-    contentBase: __dirname,
+    contentBase: path.join(__dirname, "src"),
     stats: {
       chunkModules: false,
       colors: true
