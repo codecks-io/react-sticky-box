@@ -1,6 +1,8 @@
 # React Sticky Box
 
-The code is pretty much done. Now I just need to find some time to document everything. So stay tuned!
+The code went through a lot of iterations. Now I just need to find some time to document everything. So stay tuned!
+
+This library is heavily used within [Codecks](https://www.codecks.io), so expect it to be fairly stable.
 
 ## Idea
 
@@ -10,7 +12,7 @@ We know lots of pages with sticky navigations. But what happens if the navigatio
 
 ```jsx
 <SomeContainer>
-  <StickyBox width={200}>
+  <StickyBox bottom={false|true}>
     <div className="sidebar">...sidebar...</div>
   </StickyBox>
   <div className="main">...lots of content...</div>
@@ -24,6 +26,20 @@ use an almost no-overhead-es2017 version of the library:
 `import StickyBox from "react-sticky-box/dist/react-sticky.esnext.js"`
 
 ## Changelog
+
+### 0.5 -> 0.6
+
+And another rewrite.
+
+Since `position: sticky` now is [widely supported](https://caniuse.com/#feat=css-sticky), `StickyBox` is based on this property. Since all workarounds have been shown to be insufficient in heavy applications.
+
+Browsers with no `sticky` support will fallback to a `position: "relative"` behaviour which in my opinion is much preferrable to the half-broken situation before for older browsers. You still might want to check out the 0.5 branch in case you need to support stickyness in IE and Edge <= 15.
+
+Another benefit: you don't need to specify the width anymore. Any `StickyBox` will be part of the layout flow like any other `position: "relative"` element would as well.
+
+Performance was another priority. The scroll-handler contains zero DOM-reads (except for getting the scroll position). Any container or content resize will be detected and handled separatly via the [resize-observer-polyfill](https://github.com/que-etc/resize-observer-polyfill).
+
+
 
 ### 0.4 -> 0.5
 
