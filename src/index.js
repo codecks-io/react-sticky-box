@@ -10,6 +10,16 @@ const getScrollParent = node => {
   return window;
 };
 
+const offsetTill = (node, target) => {
+  let current = node;
+  let offset = 0;
+  do {
+    offset += current.offsetTop;
+    current = current.offsetParent;
+  } while (current !== target);
+  return offset;
+};
+
 const supportedBrowser =
   window.CSS && window.CSS.supports && window.CSS.supports("position", "sticky");
 
@@ -89,7 +99,8 @@ export default class StickyBox extends React.Component {
       10
     );
     const verticalParentPadding = parentPaddingTop + parentPaddingBottom;
-    this.naturalTop = parentNode.offsetTop + parentPaddingTop + this.scrollPaneOffset;
+    this.naturalTop =
+      offsetTill(parentNode, this.scrollPane) + parentPaddingTop + this.scrollPaneOffset;
     this.parentHeight = parentNode.getBoundingClientRect().height - verticalParentPadding;
   };
 
