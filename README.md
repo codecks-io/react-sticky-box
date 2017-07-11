@@ -25,6 +25,12 @@ use an almost no-overhead-es2017 version of the library:
 
 `import StickyBox from "react-sticky-box/dist/react-sticky.esnext.js"`
 
+## `position: sticky`
+
+`StickyBox` is based on the fairly new `position: sticky` feature. And it doesn't work in any context (yet!?).
+In case it doesn't stick, try and minimize the use of `overflow` and `z-index` within the parents of the container. Also expect inconsistent behaviour if your container is positioned via `translate3D`.
+
+
 ## Changelog
 
 ### 0.5 -> 0.6
