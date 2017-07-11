@@ -10,16 +10,14 @@ const getScrollParent = node => {
   return window;
 };
 
-const supportedBrowser = CSS && CSS.supports && CSS.supports("position", "sticky");
+const supportedBrowser =
+  window.CSS && window.CSS.supports && window.CSS.supports("position", "sticky");
 
 export default class StickyBox extends React.Component {
   registerContainerRef = n => {
     if (!supportedBrowser) return;
     this.node = n;
     if (n) {
-      this.mode = "stickyTop";
-      this.node.style.position = "sticky";
-      this.node.style.top = 0;
       this.scrollPane = getScrollParent(this.node);
       this.latestScrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
       this.scrollPane.addEventListener("scroll", this.handleScroll);
@@ -39,6 +37,8 @@ export default class StickyBox extends React.Component {
       this.ron = new ResizeObserver(this.updateNode);
       this.ron.observe(this.node);
       this.updateNode();
+
+      this.initial();
     } else {
       this.scrollPane.removeEventListener("mousewheel", this.handleScroll);
       this.scrollPane.removeEventListener("scroll", this.handleScroll);
@@ -52,6 +52,23 @@ export default class StickyBox extends React.Component {
       this.scrollPane = null;
     }
   };
+
+  initial() {
+    const {bottom} = this.props;
+    if (bottom) {
+      if (this.mode !== "stickyBottom") {
+        this.mode = "stickyBottom";
+        this.node.style.position = "sticky";
+        this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
+      }
+    } else {
+      if (this.mode !== "stickyTop") {
+        this.mode = "stickyTop";
+        this.node.style.position = "sticky";
+        this.node.style.top = 0;
+      }
+    }
+  }
 
   updateViewport = () => {
     this.viewPortHeight = window.innerHeight;
@@ -85,15 +102,10 @@ export default class StickyBox extends React.Component {
     if (scrollY === this.latestScrollY) return;
     if (this.nodeHeight <= this.viewPortHeight) {
       // Just make it sticky if node smaller than viewport
-      if (this.mode !== "sticky") {
-        this.mode = "stickyTop";
-        this.node.style.position = "sticky";
-        this.node.style.top = 0;
-      }
+      this.initial();
       return;
     }
     const scrollDelta = scrollY - this.latestScrollY;
-
     if (scrollDelta > 0) {
       // scroll down
       if (this.mode === "stickyTop") {
