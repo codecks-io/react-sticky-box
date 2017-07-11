@@ -31,13 +31,13 @@ use an almost no-overhead-es2017 version of the library:
 
 And another rewrite.
 
-Since `position: sticky` now is [widely supported](https://caniuse.com/#feat=css-sticky), `StickyBox` is based on this property. Since all workarounds have been shown to be insufficient in heavy applications.
+Since `position: sticky` now is [widely supported](https://caniuse.com/#feat=css-sticky), `StickyBox` is based on this property. The main motivation is that all workarounds have been shown to be flawed in performance-heavy applications.
 
 Browsers with no `sticky` support will fallback to a `position: "relative"` behaviour which in my opinion is much preferrable to the half-broken situation before for older browsers. You still might want to check out the 0.5 branch in case you need to support stickyness in IE and Edge <= 15.
 
-Another benefit: you don't need to specify the width anymore. Any `StickyBox` will be part of the layout flow like any other `position: "relative"` element would as well.
+Another benefit of the new approach: you don't need to specify the width anymore. Any `StickyBox` will be part of the layout flow like any other `position: "relative"` element would as well.
 
-Performance was another priority. The scroll-handler contains zero DOM-reads (except for getting the scroll position). Any container or content resize will be detected and handled separatly via the [resize-observer-polyfill](https://github.com/que-etc/resize-observer-polyfill).
+Performance was another priority. The scroll-handler now contains zero DOM-reads (except for getting the scroll position). Any container or content resize will be detected and handled separately via the [resize-observer-polyfill](https://github.com/que-etc/resize-observer-polyfill).
 
 
 
