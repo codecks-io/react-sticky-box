@@ -14,20 +14,13 @@
     "precommit": "lint-staged",
     "prepublish": "npm run build"
   },
-  "keywords": [
-    "react",
-    "scroll",
-    "sticky",
-    "fixed"
-  ],
+  "keywords": ["react", "scroll", "sticky", "fixed"],
   "author": "Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/)",
   "license": "ISC",
   "main": "dist/react-sticky.cjs.js",
   "module": "dist/react-sticky.es.js",
   "repository": "danielberndt/react-sticky-box",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
@@ -38,7 +31,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "eslint": "^4.1.1",
+    "eslint": "3",
     "eslint-config-react-app": "^1.0.5",
     "eslint-plugin-flowtype": "^2.33.0",
     "eslint-plugin-import": "^2.2.0",
@@ -53,18 +46,13 @@
     "rollup-plugin-node-resolve": "^3.0.0"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0"
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
     "babel-runtime": "^6.0.0",
-    "prop-types": "^15.5.10",
-    "react-measure": "^1.4.5",
     "resize-observer-polyfill": "^1.3.1"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier",
-      "git add"
-    ]
+    "*.js": ["prettier", "git add"]
   }
 }

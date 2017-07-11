@@ -18,7 +18,7 @@ const entries = fs
 module.exports = {
   entry: entries,
   output: {
-    filename: "[name]/app.js"
+    filename: "[name]/app.js",
   },
   module: {
     rules: [
@@ -28,36 +28,30 @@ module.exports = {
         options: {
           cacheDirectory: true,
           presets: ["react", "es2015"],
-          plugins: [
-            "transform-class-properties",
-            "transform-object-rest-spread"
-          ]
+          plugins: ["transform-class-properties", "transform-object-rest-spread"],
         },
-        include: srcDirs
+        include: srcDirs,
       },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
-        include: srcDirs
-      }
-    ]
-  },
-  devtool: "cheap-module-source-map",
-  resolve: {
-    modules: [
-      path.join(__dirname, "node_modules"),
-      path.join(__dirname, "..", "node_modules")
+        include: srcDirs,
+      },
     ],
+  },
+  devtool: "eval",
+  resolve: {
+    modules: [path.join(__dirname, "node_modules"), path.join(__dirname, "..", "node_modules")],
     extensions: [".js", ".jsx"],
     alias: {
-      "react-sticky-box": path.join(__dirname, "..", "src")
-    }
+      "react-sticky-box": path.join(__dirname, "..", "src"),
+    },
   },
   devServer: {
     contentBase: path.join(__dirname, "src"),
     stats: {
       chunkModules: false,
-      colors: true
-    }
-  }
+      colors: true,
+    },
+  },
 };
