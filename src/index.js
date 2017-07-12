@@ -20,12 +20,15 @@ const offsetTill = (node, target) => {
   return offset;
 };
 
-const supportedBrowser =
-  window.CSS && window.CSS.supports && window.CSS.supports("position", "sticky");
+let stickyProp = null;
+if (window.CSS && window.CSS.supports) {
+  if (window.CSS.supports("position", "sticky")) stickyProp = "sticky";
+  else if (window.CSS.supports("position", "-webkit-sticky")) stickyProp = "-webkit-sticky";
+}
 
 export default class StickyBox extends React.Component {
   registerContainerRef = n => {
-    if (!supportedBrowser) return;
+    if (!stickyProp) return;
     this.node = n;
     if (n) {
       this.scrollPane = getScrollParent(this.node);
@@ -68,13 +71,13 @@ export default class StickyBox extends React.Component {
     if (bottom) {
       if (this.mode !== "stickyBottom") {
         this.mode = "stickyBottom";
-        this.node.style.position = "sticky";
+        this.node.style.position = stickyProp;
         this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
       }
     } else {
       if (this.mode !== "stickyTop") {
         this.mode = "stickyTop";
-        this.node.style.position = "sticky";
+        this.node.style.position = stickyProp;
         this.node.style.top = 0;
       }
     }
@@ -132,7 +135,7 @@ export default class StickyBox extends React.Component {
           this.naturalTop + this.nodeHeight + this.offset
         ) {
           this.mode = "stickyBottom";
-          this.node.style.position = "sticky";
+          this.node.style.position = stickyProp;
           this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
         }
       }
@@ -155,7 +158,7 @@ export default class StickyBox extends React.Component {
       } else if (this.mode === "relative") {
         if (this.scrollPaneOffset + scrollY < this.naturalTop + this.offset) {
           this.mode = "stickyTop";
-          this.node.style.position = "sticky";
+          this.node.style.position = stickyProp;
           this.node.style.top = 0;
         }
       }
