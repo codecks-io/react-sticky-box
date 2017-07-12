@@ -34,6 +34,10 @@ In case it doesn't stick, try and minimize the use of `overflow` and `z-index` w
 
 Browsers that don't [support](https://caniuse.com/#feat=css-sticky) `position: sticky` will fall back to a `position: relative` behaviour.
 
+## Is this production-ready?
+
+This library is heavily used within [Codecks](https://www.codecks.io), so expect it to be fairly stable.
+
 
 ## Changelog
 
