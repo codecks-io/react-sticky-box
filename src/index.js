@@ -16,7 +16,7 @@ const offsetTill = (node, target) => {
   do {
     offset += current.offsetTop;
     current = current.offsetParent;
-  } while (current !== target);
+  } while (current && current !== target);
   return offset;
 };
 
