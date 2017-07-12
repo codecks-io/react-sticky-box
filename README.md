@@ -1,16 +1,20 @@
 # React Sticky Box
 
-The code went through a lot of iterations. Now I just need to find some time to document everything. So stay tuned!
-
-This library is heavily used within [Codecks](https://www.codecks.io), so expect it to be fairly stable.
-
 ## Idea
 
 We know lots of pages with sticky navigations. But what happens if the navigation takes up more height than the viewport? StickyBox solves this issue by allowing to scroll sticky positioned elements if they are too big.
 
+## Installation
+
+`npm install react-sticky-box`
+
 ## Usage
 
 ```jsx
+import StickyBox from "react-sticky-box";
+
+//...
+
 <SomeContainer>
   <StickyBox bottom={false|true}>
     <div className="sidebar">...sidebar...</div>
@@ -19,9 +23,7 @@ We know lots of pages with sticky navigations. But what happens if the navigatio
 </SomeContainer>
 ```
 
-## Advanced usage
-
-use an almost no-overhead-es2017 version of the library:
+## Using an es2017 build:
 
 `import StickyBox from "react-sticky-box/dist/react-sticky.esnext.js"`
 
@@ -30,12 +32,14 @@ use an almost no-overhead-es2017 version of the library:
 `StickyBox` is based on the fairly new `position: sticky` feature. And it doesn't work in any context (yet!?).
 In case it doesn't stick, try and minimize the use of `overflow` and `z-index` within the parents of the container. Also expect inconsistent behaviour if your container is positioned via `translate3D`.
 
+Browsers that don't [support](https://caniuse.com/#feat=css-sticky) `position: sticky` will fall back to a `position: relative` behaviour.
+
 
 ## Changelog
 
 ### 0.5 -> 0.6
 
-And another rewrite.
+Another internal rewrite.
 
 Since `position: sticky` now is [widely supported](https://caniuse.com/#feat=css-sticky), `StickyBox` is based on this property. The main motivation is that all workarounds have been shown to be flawed in performance-heavy applications.
 
