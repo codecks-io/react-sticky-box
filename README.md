@@ -4,6 +4,10 @@
 
 We know lots of pages with sticky navigations. But what happens if the navigation takes up more height than the viewport? StickyBox solves this issue by allowing to scroll sticky positioned elements if they are too big.
 
+## See it in action
+
+[codesandbox.io/s/9jyjjn05q4](https://codesandbox.io/s/9jyjjn05q4)
+
 ## Installation
 
 `npm install react-sticky-box`
