@@ -21,9 +21,9 @@ const offsetTill = (node, target) => {
 };
 
 let stickyProp = null;
-if (window.CSS && window.CSS.supports) {
-  if (window.CSS.supports("position", "sticky")) stickyProp = "sticky";
-  else if (window.CSS.supports("position", "-webkit-sticky")) stickyProp = "-webkit-sticky";
+if (typeof CSS !== "undefined" && CSS.supports) {
+  if (CSS.supports("position", "sticky")) stickyProp = "sticky";
+  else if (CSS.supports("position", "-webkit-sticky")) stickyProp = "-webkit-sticky";
 }
 
 export default class StickyBox extends React.Component {
