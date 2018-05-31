@@ -1,7 +1,7 @@
 {
-  "name": "react-sticky-box",
-  "version": "0.6.2",
-  "description": "Boxes that behave nicely while scrolling",
+  "name": "react-sticky-content",
+  "version": "0.1.0",
+  "description": "A plugins which helps to stick an element while scrolling.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run lint && npm run prettier-all && npm run build-es && npm run build-cjs && npm run build-pure-es",
@@ -20,7 +20,7 @@
     "sticky",
     "fixed"
   ],
-  "author": "Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/)",
+  "author": "saorabh kumar (Original author, Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/))",
   "license": "ISC",
   "main": "dist/react-sticky.cjs.js",
   "module": "dist/react-sticky.es.js",

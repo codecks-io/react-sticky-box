@@ -67,7 +67,7 @@ export default class StickyBox extends React.Component {
   };
 
   initial() {
-    const {bottom} = this.props;
+    const {bottom, style} = this.props;
     if (bottom) {
       if (this.mode !== "stickyBottom") {
         this.mode = "stickyBottom";
@@ -78,7 +78,8 @@ export default class StickyBox extends React.Component {
       if (this.mode !== "stickyTop") {
         this.mode = "stickyTop";
         this.node.style.position = stickyProp;
-        this.node.style.top = 0;
+        //if top is passed in component, it will apply else it will work as before.
+        this.node.style.top = !style ? 0 : style.top;
       }
     }
   }
