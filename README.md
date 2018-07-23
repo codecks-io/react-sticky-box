@@ -33,8 +33,7 @@ import StickyBox from "react-sticky-box";
 
 ## `position: sticky`
 
-`StickyBox` is based on the fairly new `position: sticky` feature. And it doesn't work in any context (yet!?).
-In case it doesn't stick, try and minimize the use of `overflow` and `z-index` within the parents of the container. Also expect inconsistent behaviour if your container is positioned via `translate3D`.
+`StickyBox` is based on the fairly new `position: sticky` feature. Browsers might still expose some buggy behaviour with this property. In case it doesn't work as expected, try and minimize the use of `overflow` and `z-index` within the parents of the container. Also expect inconsistent behaviour if your container is positioned via `translate3D`.
 
 Browsers that don't [support](https://caniuse.com/#feat=css-sticky) `position: sticky` will fall back to a `position: relative` behaviour.
 
