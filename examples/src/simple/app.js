@@ -12,12 +12,11 @@ class Page extends React.Component {
 
   render() {
     const {paragraphCount} = this.state;
-
     return (
       <div>
         <h1>heading</h1>
         <div className="box2">
-          {range(4).map(i =>
+          {range(4).map(i => (
             <p key={i}>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
@@ -26,18 +25,14 @@ class Page extends React.Component {
               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
               mollit anim id est laborum. {i}
             </p>
-          )}
+          ))}
         </div>
         <div className="container">
           <StickyBox className="sticky">
-            {range(25).map(i =>
-              <p key={i}>
-                sidenode {i}
-              </p>
-            )}
+            {range(25).map(i => <p key={i}>sidenode {i}</p>)}
           </StickyBox>
           <div className="box2">
-            {range(paragraphCount).map(i =>
+            {range(paragraphCount).map(i => (
               <p key={i}>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
@@ -46,27 +41,17 @@ class Page extends React.Component {
                 pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
                 deserunt mollit anim id est laborum. {i}
               </p>
-            )}
+            ))}
           </div>
-          <StickyBox className="sticky" width="measure">
+          <StickyBox className="sticky" width="measure" style={{top: "100"}}>
             <div style={{width: 200 + paragraphCount * 10}}>
               <button onClick={() => this.setState({paragraphCount: 1})}>1 Para</button>
               <button onClick={() => this.setState({paragraphCount: 20})}>20 Paras</button>
-              {range(3).map(i =>
-                <p key={i}>
-                  bla sidenode {i}
-                </p>
-              )}
+              {range(3).map(i => <p key={i}>bla sidenode {i}</p>)}
             </div>
           </StickyBox>
         </div>
-        <div>
-          {range(20).map(i =>
-            <p key={i}>
-              Stuff below {i}
-            </p>
-          )}
-        </div>
+        <div>{range(20).map(i => <p key={i}>Stuff below {i}</p>)}</div>
       </div>
     );
   }
