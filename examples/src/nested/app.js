@@ -22,14 +22,12 @@ const page = (
         </div>
         <div className="side-by-side">
           <StickyBox className="content-sidebar" width={200}>
-            {range(20).map(i =>
-              <p key={i}>
-                Sidebar Item {i}
-              </p>
-            )}
+            {range(20).map(i => (
+              <p key={i}>Sidebar Item {i}</p>
+            ))}
           </StickyBox>
           <div className="content-body">
-            {range(15).map(i =>
+            {range(15).map(i => (
               <p key={i}>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
@@ -38,18 +36,16 @@ const page = (
                 pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
                 deserunt mollit anim id est laborum. {i}
               </p>
-            )}
+            ))}
           </div>
           <StickyBox className="content-sidebar" width={200}>
-            {range(5).map(i =>
-              <p key={i}>
-                Sidebar Item {i}
-              </p>
-            )}
+            {range(5).map(i => (
+              <p key={i}>Sidebar Item {i}</p>
+            ))}
           </StickyBox>
         </div>
         <div className="content-body">
-          {range(5).map(i =>
+          {range(5).map(i => (
             <p key={i}>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
@@ -58,7 +54,7 @@ const page = (
               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
               mollit anim id est laborum. {i}
             </p>
-          )}
+          ))}
         </div>
       </div>
     </div>
