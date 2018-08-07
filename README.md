@@ -6,7 +6,7 @@ We know lots of pages with sticky navigations. But what happens if the navigatio
 
 ## See it in action
 
-[codesandbox.io/s/9jyjjn05q4](https://codesandbox.io/s/9jyjjn05q4)
+[codesandbox.io/s/n7xprjw1o0](https://codesandbox.io/s/n7xprjw1o0)
 
 ## Installation
 
