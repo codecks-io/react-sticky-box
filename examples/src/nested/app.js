@@ -21,7 +21,7 @@ const page = (
           </p>
         </div>
         <div className="side-by-side">
-          <StickyBox className="content-sidebar" width={200}>
+          <StickyBox className="content-sidebar" offset={20}>
             {range(20).map(i => (
               <p key={i}>Sidebar Item {i}</p>
             ))}
@@ -38,7 +38,7 @@ const page = (
               </p>
             ))}
           </div>
-          <StickyBox className="content-sidebar" width={200}>
+          <StickyBox className="content-sidebar" offset={20}>
             {range(5).map(i => (
               <p key={i}>Sidebar Item {i}</p>
             ))}
