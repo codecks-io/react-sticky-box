@@ -75,12 +75,14 @@ export default class StickyBox extends React.Component {
     if (bottom) {
       if (this.mode !== "stickyBottom") {
         this.mode = "stickyBottom";
+        this.props.onStickyBottom();
         this.node.style.position = stickyProp;
         this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
       }
     } else {
       if (this.mode !== "stickyTop") {
         this.mode = "stickyTop";
+        this.props.onStickyTop();
         this.node.style.position = stickyProp;
         this.node.style.top = `${offset}px`;
       }
@@ -143,6 +145,7 @@ export default class StickyBox extends React.Component {
           this.naturalTop + this.nodeHeight + this.offset
         ) {
           this.mode = "stickyBottom";
+          this.props.onStickyBottom();
           this.node.style.position = stickyProp;
           this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
         }
@@ -166,6 +169,7 @@ export default class StickyBox extends React.Component {
       } else if (this.mode === "relative") {
         if (this.scrollPaneOffset + scrollY + offset < this.naturalTop + this.offset) {
           this.mode = "stickyTop";
+          this.props.onStickyTop();
           this.node.style.position = stickyProp;
           this.node.style.top = `${offset}px`;
         }
