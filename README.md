@@ -20,7 +20,7 @@ import StickyBox from "react-sticky-box";
 //...
 
 <SomeContainer>
-  <StickyBox bottom={false|true} offet={25}>
+  <StickyBox bottom={false|true} offset={25}>
     <div className="sidebar">...sidebar...</div>
   </StickyBox>
   <div className="main">...lots of content...</div>
