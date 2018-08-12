@@ -132,6 +132,7 @@ export default class StickyBox extends React.Component {
       if (this.mode === "stickyTop") {
         if (scrollY + this.scrollPaneOffset + offset > this.naturalTop) {
           this.mode = "relative";
+          this.props.onReleasedSticky();
           this.node.style.position = "relative";
           this.offset = Math.max(
             0,
@@ -158,6 +159,7 @@ export default class StickyBox extends React.Component {
           this.naturalTop + this.parentHeight
         ) {
           this.mode = "relative";
+          this.props.onReleasedSticky();
           this.node.style.position = "relative";
           this.offset =
             this.scrollPaneOffset +
