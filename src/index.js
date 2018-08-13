@@ -28,10 +28,6 @@ if (typeof CSS !== "undefined" && CSS.supports) {
 }
 
 export default class StickyBox extends React.Component {
-  static defaultProps = {
-    offset: 0,
-  };
-
   registerContainerRef = n => {
     if (!stickyProp) return;
     this.node = n;
@@ -194,8 +190,11 @@ export default class StickyBox extends React.Component {
 
 StickyBox.defaultProps = {
   onChangeMode: () => {},
+  offset: 0,
 };
 
 StickyBox.propTypes = {
   onChangeMode: PropTypes.func,
+  offset: PropTypes.number,
+  bottom: PropTypes.boolean,
 };
