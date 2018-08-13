@@ -196,5 +196,5 @@ StickyBox.defaultProps = {
 StickyBox.propTypes = {
   onChangeMode: PropTypes.func,
   offset: PropTypes.number,
-  bottom: PropTypes.boolean,
+  bottom: PropTypes.bool,
 };
