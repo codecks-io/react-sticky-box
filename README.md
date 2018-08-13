@@ -30,19 +30,22 @@ import StickyBox from "react-sticky-box";
 ## Props
 
 - **`bottom={boolean|default: false}`**
+
   If `true`, content will stick to the bottom of viewport
 
 - **`offset={number|default: 0}`**
+
   Defines the offset to the top of the viewport.
 
 - **`onChangeMode={(oldMode, newMode) => {}}`**
-  This function is called as soon as the content becomes sticky, unsticky again. The possible values for `oldMode` and `newMode` are `relative`, `stickyBottom`, `stickyTop`
+
+  This function is called as soon as the content becomes sticky or unsticky again. The possible values for `oldMode` and `newMode` are `relative`, `stickyBottom`, `stickyTop`
 
 ## Using an es2017 build:
 
 `import StickyBox from "react-sticky-box/dist/react-sticky.esnext.js"`
 
-## Some comment regarding `position: sticky`
+## Some comments regarding `position: sticky`
 
 `StickyBox` is based on the fairly new `position: sticky` feature. Browsers might still expose some buggy behaviour with this property. In case it doesn't work as expected, try and minimize the use of `overflow` and `z-index` within the parents of the container. Also expect inconsistent behaviour if your container is positioned via `translate3D`.
 
