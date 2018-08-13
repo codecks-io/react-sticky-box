@@ -75,14 +75,14 @@ export default class StickyBox extends React.Component {
     const {bottom, offset} = this.props;
     if (bottom) {
       if (this.mode !== "stickyBottom") {
-        this.props.onChangeMode(this.this.mode, "stickyBottom");
+        this.props.onChangeMode(this.mode, "stickyBottom");
         this.mode = "stickyBottom";
         this.node.style.position = stickyProp;
         this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
       }
     } else {
       if (this.mode !== "stickyTop") {
-        this.props.onChangeMode(this.this.mode, "stickyTop");
+        this.props.onChangeMode(this.mode, "stickyTop");
         this.mode = "stickyTop";
         this.node.style.position = stickyProp;
         this.node.style.top = `${offset}px`;
