@@ -33,9 +33,9 @@ import StickyBox from "react-sticky-box";
 
   If `true`, content will stick to the bottom of viewport
 
-- **`offset={number|default: 0}`**
+- **`offset={number|array[number,number]|default: 0}`**
 
-  Defines the offset to the top of the viewport.
+  Defines the offset to the top and bottom of the viewport.
 
 - **`onChangeMode={(oldMode, newMode) => {}}`**
 
