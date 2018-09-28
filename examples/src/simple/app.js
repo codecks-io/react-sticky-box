@@ -29,7 +29,7 @@ class Page extends React.Component {
           ))}
         </div>
         <div className="container">
-          <StickyBox className="sticky" offset={20}>
+          <StickyBox className="sticky" offsetTop={20}>
             {range(25).map(i => (
               <p key={i}>sidenode {i}</p>
             ))}
@@ -46,12 +46,12 @@ class Page extends React.Component {
               </p>
             ))}
           </div>
-          <StickyBox className="sticky" offset={20}>
+          <StickyBox className="sticky" offsetTop={20}>
             <div style={{width: 200 + paragraphCount * 10}}>
               <button onClick={() => this.setState({paragraphCount: 1})}>1 Para</button>
               <button onClick={() => this.setState({paragraphCount: 20})}>20 Paras</button>
               {range(3).map(i => (
-                <p key={i}>bla sidenode {i}</p>
+                <p key={i}>sidenode {i}</p>
               ))}
             </div>
           </StickyBox>

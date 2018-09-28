@@ -33,9 +33,13 @@ import StickyBox from "react-sticky-box";
 
   If `true`, content will stick to the bottom of viewport
 
-- **`offset={number|default: 0}`**
+- **`offsetTop={number|default: 0}`**
 
   Defines the offset to the top of the viewport.
+
+- **`offsetBottom={number|default: 0}`**
+
+  Defines the offset to the bottom of the viewport.
 
 - **`onChangeMode={(oldMode, newMode) => {}}`**
 
@@ -57,6 +61,12 @@ This library is heavily used within [Codecks](https://www.codecks.io), so expect
 
 
 ## Changelog
+
+### 0.6 -> 0.7
+
+Introducing the `offsetTop` and `offsetBottom` props.
+
+*The `offset` prop is deprecated.* Please use `offsetTop` which has the exact same semantics. `offset` will be removed in v0.8.
 
 ### 0.5 -> 0.6
 

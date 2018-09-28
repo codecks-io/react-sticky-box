@@ -28,6 +28,23 @@ if (typeof CSS !== "undefined" && CSS.supports) {
 }
 
 export default class StickyBox extends React.Component {
+  constructor(props) {
+    super(props);
+    if (props.offset && process.env.NODE_ENV !== "production") {
+      console.warn(
+        `react-sticky-box's "offset" prop is deprecated. Please use "offsetTop" instead. It'll be removed in v0.8.`
+      );
+    }
+  }
+
+  getOffsets() {
+    const {offset: deprecatedOffset, offsetTop: propOffsetTop, offsetBottom} = this.props;
+    return {
+      offsetTop: propOffsetTop || deprecatedOffset,
+      offsetBottom,
+    };
+  }
+
   registerContainerRef = n => {
     if (!stickyProp) return;
     this.node = n;
@@ -68,20 +85,21 @@ export default class StickyBox extends React.Component {
   };
 
   initial() {
-    const {bottom, offset} = this.props;
+    const {bottom} = this.props;
+    const {offsetTop, offsetBottom} = this.getOffsets();
     if (bottom) {
       if (this.mode !== "stickyBottom") {
         this.props.onChangeMode(this.mode, "stickyBottom");
         this.mode = "stickyBottom";
         this.node.style.position = stickyProp;
-        this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
+        this.node.style.top = `${this.viewPortHeight - this.nodeHeight - offsetBottom}px`;
       }
     } else {
       if (this.mode !== "stickyTop") {
         this.props.onChangeMode(this.mode, "stickyTop");
         this.mode = "stickyTop";
         this.node.style.position = stickyProp;
-        this.node.style.top = `${offset}px`;
+        this.node.style.top = `${offsetTop}px`;
       }
     }
   }
@@ -115,10 +133,10 @@ export default class StickyBox extends React.Component {
   };
 
   handleScroll = () => {
-    const {offset} = this.props;
+    const {offsetTop, offsetBottom} = this.getOffsets();
     const scrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
     if (scrollY === this.latestScrollY) return;
-    if (this.nodeHeight + offset <= this.viewPortHeight) {
+    if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
       // Just make it sticky if node smaller than viewport
       this.initial();
       return;
@@ -127,33 +145,33 @@ export default class StickyBox extends React.Component {
     if (scrollDelta > 0) {
       // scroll down
       if (this.mode === "stickyTop") {
-        if (scrollY + this.scrollPaneOffset + offset > this.naturalTop) {
+        if (scrollY + this.scrollPaneOffset + offsetTop > this.naturalTop) {
           this.props.onChangeMode(this.mode, "relative");
           this.mode = "relative";
           this.node.style.position = "relative";
           this.offset = Math.max(
             0,
-            this.scrollPaneOffset + this.latestScrollY - this.naturalTop + offset
+            this.scrollPaneOffset + this.latestScrollY - this.naturalTop + offsetTop
           );
           this.node.style.top = `${this.offset}px`;
         }
       } else if (this.mode === "relative") {
         if (
           scrollY + this.scrollPaneOffset + this.viewPortHeight >
-          this.naturalTop + this.nodeHeight + this.offset
+          this.naturalTop + this.nodeHeight + this.offset + offsetBottom
         ) {
           this.props.onChangeMode(this.mode, "stickyBottom");
           this.mode = "stickyBottom";
           this.node.style.position = stickyProp;
-          this.node.style.top = `${this.viewPortHeight - this.nodeHeight}px`;
+          this.node.style.top = `${this.viewPortHeight - this.nodeHeight - offsetBottom}px`;
         }
       }
     } else {
       // scroll up
       if (this.mode === "stickyBottom") {
         if (
-          this.scrollPaneOffset + scrollY + this.viewPortHeight + offset <
-          this.naturalTop + this.parentHeight
+          this.scrollPaneOffset + scrollY + this.viewPortHeight <
+          this.naturalTop + this.parentHeight + offsetBottom
         ) {
           this.props.onChangeMode(this.mode, "relative");
           this.mode = "relative";
@@ -162,15 +180,15 @@ export default class StickyBox extends React.Component {
             this.scrollPaneOffset +
             this.latestScrollY +
             this.viewPortHeight -
-            (this.naturalTop + this.nodeHeight);
+            (this.naturalTop + this.nodeHeight + offsetBottom);
           this.node.style.top = `${this.offset}px`;
         }
       } else if (this.mode === "relative") {
-        if (this.scrollPaneOffset + scrollY + offset < this.naturalTop + this.offset) {
+        if (this.scrollPaneOffset + scrollY + offsetTop < this.naturalTop + this.offset) {
           this.props.onChangeMode(this.mode, "stickyTop");
           this.mode = "stickyTop";
           this.node.style.position = stickyProp;
-          this.node.style.top = `${offset}px`;
+          this.node.style.top = `${offsetTop}px`;
         }
       }
     }
@@ -191,10 +209,14 @@ export default class StickyBox extends React.Component {
 StickyBox.defaultProps = {
   onChangeMode: () => {},
   offset: 0,
+  offsetTop: 0,
+  offsetBottom: 0,
 };
 
 StickyBox.propTypes = {
   onChangeMode: PropTypes.func,
-  offset: PropTypes.number,
+  offset: PropTypes.number, // deprecated
+  offsetTop: PropTypes.number,
+  offsetBottom: PropTypes.number,
   bottom: PropTypes.bool,
 };
