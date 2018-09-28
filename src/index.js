@@ -28,6 +28,23 @@ if (typeof CSS !== "undefined" && CSS.supports) {
 }
 
 export default class StickyBox extends React.Component {
+  constructor(props) {
+    super(props);
+    if (props.offset && process.env.NODE_ENV !== "production") {
+      console.warn(
+        `react-sticky-box's "offset" prop is deprecated. Please use "offsetTop" instead. It'll be removed in v0.8.`
+      );
+    }
+  }
+
+  getOffsets() {
+    const {offset: deprecatedOffset, offsetTop: propOffsetTop, offsetBottom} = this.props;
+    return {
+      offsetTop: propOffsetTop || deprecatedOffset,
+      offsetBottom,
+    };
+  }
+
   registerContainerRef = n => {
     if (!stickyProp) return;
     this.node = n;
@@ -68,9 +85,8 @@ export default class StickyBox extends React.Component {
   };
 
   initial() {
-    const {bottom, offset} = this.props;
-    const offsetTop    = Array.isArray(offset) ? offset[0] : offset;
-    const offsetBottom = Array.isArray(offset) ? offset[1] : offset;
+    const {bottom} = this.props;
+    const {offsetTop, offsetBottom} = this.getOffsets();
     if (bottom) {
       if (this.mode !== "stickyBottom") {
         this.props.onChangeMode(this.mode, "stickyBottom");
@@ -117,9 +133,7 @@ export default class StickyBox extends React.Component {
   };
 
   handleScroll = () => {
-    const {offset} = this.props;
-    const offsetTop    = Array.isArray(offset) ? offset[0] : offset;
-    const offsetBottom = Array.isArray(offset) ? offset[1] : offset;
+    const {offsetTop, offsetBottom} = this.getOffsets();
     const scrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
     if (scrollY === this.latestScrollY) return;
     if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
@@ -195,10 +209,14 @@ export default class StickyBox extends React.Component {
 StickyBox.defaultProps = {
   onChangeMode: () => {},
   offset: 0,
+  offsetTop: 0,
+  offsetBottom: 0,
 };
 
 StickyBox.propTypes = {
   onChangeMode: PropTypes.func,
-  offset: PropTypes.number,
+  offset: PropTypes.number, // deprecated
+  offsetTop: PropTypes.number,
+  offsetBottom: PropTypes.number,
   bottom: PropTypes.bool,
 };
