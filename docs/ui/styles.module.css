@@ -2,6 +2,7 @@
   max-height: 200px;
   overflow: auto;
   background-color: #eee;
+  border-radius: 3px;
 }
 
 .bigBody {
