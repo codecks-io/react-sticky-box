@@ -1,0 +1,145 @@
+---
+name: React Sticky Box
+order: 0
+route: '/'
+---
+
+import {Playground} from "docz"
+import StickyBox from "react-sticky-box";
+import styles from "./ui/styles.module.css"
+import Sidebar from "./ui/Sidebar"
+
+# React Sticky Box
+
+## See it in Action
+
+<div className={styles.bigBody}>
+  <div className={styles.row}>
+    <div className={styles.miniContent}/>
+  </div>
+  <div className={styles.row}>
+    <StickyBox offsetTop={20} offsetBottom={20}>
+      <Sidebar elements={20}/>
+    </StickyBox>
+    <div className={styles.largeContent}><p>The sidebar to the left stays in a sticky position.</p>
+      <p>Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes greater than the viewport.</p></div>
+  </div>
+  <div className={styles.row}>
+    <div className={styles.content}/>
+  </div>
+</div>
+
+## What the Code looks like
+
+```jsx
+import React from "react"
+import StickyBox from "react-sticky-box";
+
+const Page = () => (
+  <div className="row">
+    <StickyBox offsetTop={20} offsetBottom={20}>
+      <div>Sidebar</div>
+    </StickyBox>
+    <div>Content</div>
+  </div>
+)
+```
+
+You may also import an es2017 build via
+
+```jsx
+import StickyBox from "react-sticky-box/dist/react-sticky.esnext.js"
+```
+
+## How to install
+
+```bash
+yarn add react-sticky-box
+```
+
+```bash
+npm install react-sticky-box
+```
+
+## How it works
+
+React Sticky Box relies on `position: sticky`. It's [widely supported](https://caniuse.com/#feat=css-sticky) these days.
+
+For all browsers without sticky support it falls back to a `position: relative` behaviour which should be a decent enough in most cases.
+
+`position: sticky` isn't without it's issues though. If the content is bigger than the viewport, it simply gets cut off and becomes inaccessible. This library solves this issue by allowing the content to scroll along with all the other content until the the corresponding end is visible and continues to be sticky.
+
+You still might encounter browser bugs with `position: sticky` if your content lies within certain combinations of `z-index`, `overflow` and especially `transform`.
+
+## What kind of scroll containers can be used
+
+### Window
+
+```jsx
+<body>
+  <div style={{display: "flex", alignItems: "flex-start"}}>
+    <StickyBox>Sidebar</StickyBox>
+    <div>Main Content</div>
+  </div>
+</body>
+```
+
+### Scroll Container as offset parent
+
+```jsx
+<div style={{height: 200, position: "relative", overflow: "auto"}}>
+  <div style={{position: "absolute", top: 0, left: 0, minHeight: "100%"}}>
+    <StickyBox>Sidebar</StickyBox>
+    <div>Main Content</div>
+  </div>
+</div>
+```
+
+### Scroll Container as non-offset parent
+
+```jsx
+<div style={{height: 200, overflow: "auto"}}>
+  <div style={{display: "flex", alignItems: "flex-start"}}>
+    <StickyBox>Sidebar</StickyBox>
+    <div>Main Content</div>
+  </div>
+</div>
+```
+
+## Troubleshooting
+
+### The StickyBox is not sticky!
+
+Make sure that the `<StickyBox>` is only as high as its content, and not as high as the parent node. To quickly check this you can do:
+```jsx
+<StickyBox style={{border: '3px solid green'}}>content</StickyBox>
+```
+
+#### Good
+
+<Playground>
+  <div style={{height: 80, overflow: "auto"}}>
+    <div style={{display: "flex", alignItems: "flex-start"}}>
+      <StickyBox style={{border: '3px solid green'}}>Sidebar</StickyBox>
+      <div style={{height: 150, border: '3px solid blue'}}>Main Content</div>
+    </div>
+  </div>
+</Playground>
+
+#### Bad
+
+This time without `alignItems: "flex-start"`
+
+<Playground>
+  <div style={{height: 80, overflow: "auto"}}>
+    <div style={{display: "flex"}}>
+      <StickyBox style={{border: '3px solid green'}}>Sidebar</StickyBox>
+      <div style={{height: 150, border: '3px solid blue'}}>Main Content</div>
+    </div>
+  </div>
+</Playground>
+
+
+## Is this production-ready?
+
+This library is heavily used within [Codecks](https://www.codecks.io), so expect it to be fairly stable.

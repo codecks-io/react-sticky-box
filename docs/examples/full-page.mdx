@@ -1,0 +1,29 @@
+---
+name: Full Page
+menu: Examples
+order: 5
+---
+
+import {Playground} from "docz"
+import StickyBox from "react-sticky-box";
+import styles from "../ui/styles.module.css"
+import Sidebar from "../ui/Sidebar"
+
+# Full Page Example
+
+This page mostly serves to verify that it's also working if the window serves as scroll container. (Which probably is the most common case)
+
+<div>
+  <div className={styles.row}>
+    <div className={styles.smallContent}>Header</div>
+  </div>
+  <div className={styles.row}>
+    <StickyBox offsetTop={20} offsetBottom={20}>
+      <Sidebar elements={20}/>
+    </StickyBox>
+    <div className={styles.largeContent}>Content</div>
+  </div>
+  <div className={styles.row}>
+    <div className={styles.smallContent}>Footer</div>
+  </div>
+</div>

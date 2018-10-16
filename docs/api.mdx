@@ -1,0 +1,43 @@
+---
+name: Api
+order: 1
+---
+
+# Api
+
+## Usage
+
+```jsx
+import StickyBox from "react-sticky-box";
+
+<div className="container">
+  <StickyBox
+    bottom={false|true}
+    offsetTop={number}
+    offsetBottom={number}
+    onChangeMode={callback}
+  >
+    <div className="sidebar">Sidebar</div>
+  </StickyBox>
+  <div className="main">Content</div>
+</div>
+```
+
+## Props
+
+- **`bottom={boolean|default: false}`**
+
+  If `true`, content will stick to the bottom of viewport
+
+- **`offsetTop={number|default: 0}`**
+
+  Defines the offset to the top of the viewport.
+
+- **`offsetBottom={number|default: 0}`**
+
+  Defines the offset to the bottom of the viewport.
+
+- **`onChangeMode={(oldMode, newMode) => {}}`**
+
+  This function is called as soon as the content becomes sticky or unsticky again. The possible values for `oldMode` and `newMode` are `relative`, `stickyBottom`, `stickyTop`
+

@@ -1,0 +1,64 @@
+.body {
+  max-height: 200px;
+  overflow: auto;
+  background-color: #eee;
+}
+
+.bigBody {
+  composes: body;
+  max-height: 400px;
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.4) inset;
+  border: 1px solid #ddd;
+}
+
+.row {
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.content {
+  background-color: #fff;
+  padding: 10px;
+  flex: auto;
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.4);
+  height: 500px;
+  margin: 0 10px;
+}
+
+.smallContent {
+  composes: content;
+  height: 100px;
+}
+
+.miniContent {
+  composes: content;
+  height: 40px;
+}
+
+.largeContent {
+  composes: content;
+  min-height: 700px;
+  height: 120vh;
+}
+
+.sidebar {
+  background-color: #fff;
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  min-width: 120px;
+  margin: 0 10px;
+}
+
+.fauxNavElement {
+  height: 10px;
+  background-color: #eee;
+}
+
+.fauxNav {
+  margin: 20px 0;
+}
+
+.fauxNavElement:not(:last-child) {
+  margin-bottom: 10px;
+}
