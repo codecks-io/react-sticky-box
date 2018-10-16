@@ -45,7 +45,6 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "concurrent-transform": "^1.0.0",
-    "del": "^3.0.0",
     "docz": "^0.12.5",
     "docz-plugin-css": "^0.11.0",
     "eslint": "^4.1.1",

@@ -3,7 +3,6 @@ const awspublish = require("gulp-awspublish");
 const awspublishRouter = require("gulp-awspublish-router");
 const cloudfront = require("gulp-cloudfront-invalidate-aws-publish");
 const exec = require("@danielberndt/exec");
-const del = require("del");
 const parallelize = require("concurrent-transform");
 
 const CONFIG = {
@@ -12,11 +11,10 @@ const CONFIG = {
   robots: "./docs/robots.txt",
 };
 
-const build = () => exec("yarn docz:build");
-
-gulp.task("clean-dist", () => del([CONFIG.dist]));
-gulp.task("favicon", ["clean-dist"], () => gulp.src(CONFIG.favicon).pipe(gulp.dest(CONFIG.dist)));
-gulp.task("robots", ["clean-dist"], () => gulp.src(CONFIG.robots).pipe(gulp.dest(CONFIG.dist)));
+gulp.task("build", () => exec("yarn docz:build"));
+gulp.task("build-and-move-assets", ["build"], () => {
+  return gulp.src([CONFIG.favicon, CONFIG.robots]).pipe(gulp.dest(CONFIG.dist));
+});
 
 const deployCmd = envFile => () => {
   if (envFile) require("dotenv").config({path: envFile});
@@ -63,6 +61,5 @@ const deployCmd = envFile => () => {
 };
 
 gulp.task("load-env");
-gulp.task("build", ["clean-dist"], build);
-gulp.task("deploy", ["build", "favicon", "robots"], deployCmd(".env"));
-gulp.task("deploy-from-ci", ["build", "favicon", "robots"], deployCmd());
+gulp.task("deploy", ["build-and-move-assets"], deployCmd(".env"));
+gulp.task("deploy-from-ci", ["build-and-move-assets"], deployCmd());

@@ -49,7 +49,7 @@ jobs:
 
 workflows:
   version: 2
-  deploy-docs:
+  default:
     jobs:
       - build-and-test
       - deploy-docs:
