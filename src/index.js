@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import ResizeObserver from "resize-observer-polyfill";
 
 const getScrollParent = node => {
-  let offsetParent = node;
-  while ((offsetParent = offsetParent.offsetParent)) {
-    const overflowYVal = getComputedStyle(offsetParent, null).getPropertyValue("overflow-y");
-    if (overflowYVal === "auto" || overflowYVal === "scroll") return offsetParent;
+  let parent = node;
+  while ((parent = parent.parentElement)) {
+    const overflowYVal = getComputedStyle(parent, null).getPropertyValue("overflow-y");
+    if (overflowYVal === "auto" || overflowYVal === "scroll") return parent;
   }
   return window;
 };
@@ -14,6 +14,12 @@ const getScrollParent = node => {
 const offsetTill = (node, target) => {
   let current = node;
   let offset = 0;
+  // If target is not an offsetParent itself, subtract its offsetTop and set correct target
+  if (target.firstChild && target.firstChild.offsetParent !== target) {
+    offset += node.offsetTop - target.offsetTop;
+    target = node.offsetParent;
+    offset += -node.offsetTop;
+  }
   do {
     offset += current.offsetTop;
     current = current.offsetParent;
@@ -51,6 +57,7 @@ export default class StickyBox extends React.Component {
     if (n) {
       this.scrollPane = getScrollParent(this.node);
       this.latestScrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
+
       this.scrollPane.addEventListener("scroll", this.handleScroll);
       this.scrollPane.addEventListener("mousewheel", this.handleScroll);
       if (this.scrollPane === window) {
@@ -67,7 +74,7 @@ export default class StickyBox extends React.Component {
 
       this.ron = new ResizeObserver(this.updateNode);
       this.ron.observe(this.node);
-      this.updateNode();
+      this.updateNode({initial: true});
 
       this.initial();
     } else {
@@ -111,7 +118,12 @@ export default class StickyBox extends React.Component {
 
   updateScrollPane = () => {
     this.viewPortHeight = this.scrollPane.offsetHeight;
-    this.scrollPaneOffset = this.scrollPane.getBoundingClientRect().top;
+    // Only applicable if scrollPane is an offsetParent
+    if (this.scrollPane.firstChild.offsetParent === this.scrollPane) {
+      this.scrollPaneOffset = this.scrollPane.getBoundingClientRect().top;
+    } else {
+      this.scrollPaneOffset = 0;
+    }
   };
 
   updateParentNode = () => {
@@ -128,8 +140,25 @@ export default class StickyBox extends React.Component {
     this.parentHeight = parentNode.getBoundingClientRect().height - verticalParentPadding;
   };
 
-  updateNode = () => {
+  updateNode = ({initial} = {}) => {
+    const prevHeight = this.nodeHeight;
     this.nodeHeight = this.node.getBoundingClientRect().height;
+    if (!initial && prevHeight !== this.nodeHeight) {
+      this.mode = undefined;
+      const {offsetTop, offsetBottom} = this.getOffsets();
+      if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
+        // Just make it sticky if node smaller than viewport
+        this.initial();
+        return;
+      } else {
+        this.mode = "relative";
+        this.node.style.position = "relative";
+        const lowestPossible = this.parentHeight - this.nodeHeight;
+        const current = this.scrollPaneOffset + this.latestScrollY - this.naturalTop + offsetTop;
+        this.offset = Math.max(0, Math.min(lowestPossible, current));
+        this.node.style.top = `${this.offset}px`;
+      }
+    }
   };
 
   handleScroll = () => {
@@ -139,6 +168,7 @@ export default class StickyBox extends React.Component {
     if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
       // Just make it sticky if node smaller than viewport
       this.initial();
+      this.latestScrollY = scrollY;
       return;
     }
     const scrollDelta = scrollY - this.latestScrollY;
@@ -176,11 +206,13 @@ export default class StickyBox extends React.Component {
           this.props.onChangeMode(this.mode, "relative");
           this.mode = "relative";
           this.node.style.position = "relative";
-          this.offset =
+          this.offset = Math.max(
+            0,
             this.scrollPaneOffset +
-            this.latestScrollY +
-            this.viewPortHeight -
-            (this.naturalTop + this.nodeHeight + offsetBottom);
+              this.latestScrollY +
+              this.viewPortHeight -
+              (this.naturalTop + this.nodeHeight + offsetBottom)
+          );
           this.node.style.top = `${this.offset}px`;
         }
       } else if (this.mode === "relative") {
