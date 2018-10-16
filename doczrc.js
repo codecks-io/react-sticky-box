@@ -7,9 +7,17 @@ export default {
   src: "docs",
   ordering: "ascending",
   modifyBundlerConfig: config => {
+    config.optimization.splitChunks = {
+      automaticNameDelimiter: "-",
+      ...config.optimization.splitChunks,
+    };
+    config.optimization.runtimeChunk = {
+      ...config.optimization.runtimeChunk,
+      name: entrypoint => `runtime-${entrypoint.name}`,
+    };
     config.resolve.alias = {
-      ...config.resolve.alias,
       "react-sticky-box": path.join(__dirname, "src"),
+      ...config.resolve.alias,
     };
     return config;
   },
