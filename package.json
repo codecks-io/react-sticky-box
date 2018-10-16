@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-box",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Boxes that behave nicely while scrolling",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
