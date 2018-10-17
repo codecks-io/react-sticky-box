@@ -12,9 +12,6 @@ export default class Sidebar extends React.Component {
     return (
       <div className={styles.sidebar}>
         <div className={styles.label}>Sidebar</div>
-        <button onClick={() => this.setState({isExpanded: !isExpanded})}>
-          {isExpanded ? "collapse" : "expand"}
-        </button>
         {isExpanded && (
           <div className={styles.fauxNav}>
             {Array.from(new Array(elements), (_, i) => (
@@ -22,6 +19,9 @@ export default class Sidebar extends React.Component {
             ))}
           </div>
         )}
+        <button onClick={() => this.setState({isExpanded: !isExpanded})}>
+          {isExpanded ? "collapse" : "expand"}
+        </button>
       </div>
     );
   }
