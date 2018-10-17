@@ -139,6 +139,21 @@ This time without `alignItems: "flex-start"`
   </div>
 </Playground>
 
+### The StickyBox doesn't update when I call `window.scrollTo`
+
+`window.scrollTo` doesn't fire a `scroll` event. So you need to do it manually:
+
+```js
+window.scrollTo({top: 0});
+window.dispatchEvent(new Event('scroll'));
+```
+
+Alternatively you can try to use `behaviour: 'smooth'` which seems to fire `scroll` events.
+
+```js
+window.scrollTo({top: 0, behaviour: 'smooth'});
+```
+
 
 ## Is this production-ready?
 
