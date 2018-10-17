@@ -24,6 +24,8 @@ This page mostly serves to verify that it's also working if the window serves as
     <div className={styles.largeContent}>Content</div>
   </div>
   <div className={styles.row}>
-    <div className={styles.smallContent}>Footer</div>
+    <div className={styles.smallContent}>
+      <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Scroll to top</button>
+    </div>
   </div>
 </div>
