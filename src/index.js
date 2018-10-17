@@ -33,6 +33,18 @@ if (typeof CSS !== "undefined" && CSS.supports) {
   else if (CSS.supports("position", "-webkit-sticky")) stickyProp = "-webkit-sticky";
 }
 
+// Inspired by https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
+let passiveArg = false;
+try {
+  var opts = Object.defineProperty({}, "passive", {
+    get() {
+      passiveArg = {passive: true};
+    },
+  });
+  window.addEventListener("testPassive", null, opts);
+  window.removeEventListener("testPassive", null, opts);
+} catch (e) {}
+
 export default class StickyBox extends React.Component {
   constructor(props) {
     super(props);
@@ -58,8 +70,8 @@ export default class StickyBox extends React.Component {
       this.scrollPane = getScrollParent(this.node);
       this.latestScrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
 
-      this.scrollPane.addEventListener("scroll", this.handleScroll);
-      this.scrollPane.addEventListener("mousewheel", this.handleScroll);
+      this.scrollPane.addEventListener("scroll", this.handleScroll, passiveArg);
+      this.scrollPane.addEventListener("mousewheel", this.handleScroll, passiveArg);
       if (this.scrollPane === window) {
         window.addEventListener("resize", this.updateViewport);
         this.updateViewport();
@@ -78,8 +90,8 @@ export default class StickyBox extends React.Component {
 
       this.initial();
     } else {
-      this.scrollPane.removeEventListener("mousewheel", this.handleScroll);
-      this.scrollPane.removeEventListener("scroll", this.handleScroll);
+      this.scrollPane.removeEventListener("mousewheel", this.handleScroll, passiveArg);
+      this.scrollPane.removeEventListener("scroll", this.handleScroll, passiveArg);
       if (this.scrollPane === window) {
         window.removeEventListener("resize", this.getMeasurements);
       } else {

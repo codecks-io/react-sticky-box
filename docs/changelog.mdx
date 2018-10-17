@@ -5,6 +5,10 @@ order: 7
 
 # Changelog
 
+## 0.7.2
+
+- apply [`{passive: true}`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Improving_scrolling_performance_with_passive_listeners) to `scroll` and `mousewheel` listeners if it's supported by browsers
+
 ## 0.7.1
 
 - Fix sticky behaviour when scroll parent was not offset parent.
