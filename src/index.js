@@ -130,6 +130,12 @@ export default class StickyBox extends React.Component {
 
   updateScrollPane = () => {
     this.viewPortHeight = this.scrollPane.offsetHeight;
+    if (process.env.NODE_ENV !== "production" && this.viewPortHeight === 0) {
+      console.warn(
+        `react-sticky-box's scroll pane has a height of 0. This seems odd. Please check this node:`,
+        this.scrollPane
+      );
+    }
     // Only applicable if scrollPane is an offsetParent
     if (this.scrollPane.firstChild.offsetParent === this.scrollPane) {
       this.scrollPaneOffset = this.scrollPane.getBoundingClientRect().top;
