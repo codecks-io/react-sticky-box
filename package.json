@@ -37,28 +37,28 @@
     "@danielberndt/exec": "^1.1.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "^9.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.6",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.19",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "concurrent-transform": "^1.0.0",
     "docz": "^0.12.5",
     "docz-plugin-css": "^0.11.0",
-    "eslint": "^4.1.1",
-    "eslint-config-react-app": "^2.1.0",
+    "eslint": "^5.0.0",
+    "eslint-config-react-app": "^3.0.4",
     "eslint-plugin-flowtype": "^2.34.1",
     "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-jsx-a11y": "^6.0.0",
     "eslint-plugin-react": "^7.1.0",
     "gulp": "^3.9.1",
     "gulp-awspublish": "^3.4.0",
-    "gulp-awspublish-router": "^0.1.5",
+    "gulp-awspublish-router": "^0.2.0",
     "gulp-cloudfront-invalidate-aws-publish": "^1.0.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^4.0.1",
+    "husky": "^1.1.2",
+    "lint-staged": "^7.3.0",
     "prettier-eslint-cli": "^4.1.1",
     "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
@@ -73,9 +73,15 @@
     "prop-types": "^15.6.2",
     "resize-observer-polyfill": "^1.3.1"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.js": [
-      "prettier",
+      "npm run prettier",
+      "npm run lint",
       "git add"
     ]
   }

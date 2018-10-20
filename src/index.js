@@ -37,6 +37,7 @@ if (typeof CSS !== "undefined" && CSS.supports) {
 let passiveArg = false;
 try {
   var opts = Object.defineProperty({}, "passive", {
+    // eslint-disable-next-line getter-return
     get() {
       passiveArg = {passive: true};
     },
