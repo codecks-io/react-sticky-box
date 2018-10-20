@@ -4,8 +4,8 @@
   "description": "Boxes that behave nicely while scrolling",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run lint && npm run prettier-all && npm run build-es && npm run build-cjs && npm run build-pure-es",
-    "lint": "eslint --max-warnings=0 src docs",
+    "build": "npm run lint && npm run prettier-all && npm run build:es && npm run build:cjs && npm run build:pure-es",
+    "lint": "eslint --max-warnings=0 src docs *.js",
     "docz:dev": "docz dev",
     "docz:build": "docz build",
     "docz:deploy": "gulp deploy",
@@ -13,9 +13,9 @@
     "is-prettier": "prettier --list-different src/**/*.js docs/**/*.js *.js",
     "prettier": "prettier-eslint --write ",
     "prettier-all": "npm run prettier src/**/*.js",
-    "build-es": "rollup --config --format es --output dist/react-sticky.es.js",
-    "build-pure-es": "rollup --config --environment PURE:true --format es --output dist/react-sticky.esnext.js",
-    "build-cjs": "rollup --config --format cjs --output dist/react-sticky.cjs.js",
+    "build:es": "rollup --config --environment BUILD_FORMAT:esm --file dist/react-sticky.es.js",
+    "build:pure-es": "rollup --config --environment PURE:true,BUILD_FORMAT:esm --file dist/react-sticky.esnext.js",
+    "build:cjs": "rollup --config --environment BUILD_FORMAT:cjs --file dist/react-sticky.cjs.js",
     "precommit": "lint-staged",
     "prepublish": "npm run build"
   },
@@ -34,16 +34,15 @@
     "dist"
   ],
   "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
     "@danielberndt/exec": "^1.1.0",
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
     "babel-eslint": "^9.0.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-minify-dead-code-elimination": "^0.5.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.19",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
     "concurrent-transform": "^1.0.0",
     "docz": "^0.12.5",
     "docz-plugin-css": "^0.11.0",
@@ -60,16 +59,16 @@
     "husky": "^1.1.2",
     "lint-staged": "^7.3.0",
     "prettier-eslint-cli": "^4.1.1",
-    "rollup": "^0.43.0",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0"
+    "rollup": "^0.66.6",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
-    "babel-runtime": "^6.0.0",
+    "@babel/runtime": "^7.1.2",
     "prop-types": "^15.6.2",
     "resize-observer-polyfill": "^1.3.1"
   },

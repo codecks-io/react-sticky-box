@@ -1,31 +1,36 @@
-import resolve from "rollup-plugin-node-resolve";
+import nodeResolve from "rollup-plugin-node-resolve";
 import babel from "rollup-plugin-babel";
 import commonjs from "rollup-plugin-commonjs";
 import pkg from "./package.json";
 
 const pure = process.env.PURE === "true";
+const format = process.env.BUILD_FORMAT;
 
 export default {
-  entry: "src/index.js",
+  input: "src/index.js",
+  output: {format},
   plugins: [
-    resolve({}),
+    nodeResolve({jsnext: true, main: true}),
     commonjs({include: "node_modules/**"}),
     babel({
       exclude: "node_modules/**", // only transpile our source code,
       runtimeHelpers: true,
-      presets: pure
-        ? ["react"]
-        : [
-            "react",
-            [
-              "es2015",
-              {
-                modules: false,
-              },
-            ],
-          ],
+      presets: [
+        "@babel/preset-react",
+        [
+          "@babel/env",
+          {
+            modules: false,
+            loose: true,
+            targets: {
+              browsers: pure
+                ? ["last 1 chrome version", "last 1 firefox version"]
+                : ["ie 10", "ios 7"],
+            },
+          },
+        ],
+      ],
       plugins: [
-        "transform-class-properties",
         [
           "transform-react-remove-prop-types",
           {
@@ -33,18 +38,12 @@ export default {
             ignoreFilenames: ["node_modules"],
           },
         ],
-        ["transform-object-rest-spread", pure ? {useBuiltIns: true} : {}],
-        [
-          "transform-runtime",
-          {
-            polyfill: !pure,
-            regenerator: false,
-          },
-        ],
-        ...(pure ? [["transform-react-jsx", {useBuiltIns: true}]] : []),
+        ["@babel/transform-runtime"],
+        ["@babel/proposal-class-properties", {loose: true}],
+        "minify-dead-code-elimination",
       ],
     }),
   ],
   external: id =>
-    pkg.peerDependencies[id] || pkg.dependencies[id] || id.indexOf("babel-runtime") === 0,
+    pkg.peerDependencies[id] || pkg.dependencies[id] || id.indexOf("@babel/runtime") === 0,
 };
