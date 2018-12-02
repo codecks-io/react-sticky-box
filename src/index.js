@@ -6,6 +6,7 @@ const getScrollParent = node => {
   let parent = node;
   while ((parent = parent.parentElement)) {
     const overflowYVal = getComputedStyle(parent, null).getPropertyValue("overflow-y");
+    if (parent === document.body) return window;
     if (overflowYVal === "auto" || overflowYVal === "scroll") return parent;
   }
   return window;
