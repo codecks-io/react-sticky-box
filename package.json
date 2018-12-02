@@ -10,9 +10,9 @@
     "docz:build": "docz build",
     "docz:deploy": "gulp deploy",
     "docz:deploy-from-ci": "gulp deploy-from-ci",
-    "is-prettier": "prettier --list-different src/**/*.js docs/**/*.js *.js",
+    "is-prettier": "prettier --list-different {src,docs}/**/*.{js,json,css,mdx} *.js",
     "prettier": "prettier --write",
-    "prettier-all": "npm run prettier src/**/*.js docs/**/*.js *.js",
+    "prettier:all": "prettier --write {src,docs}/**/*.{js,json,css,mdx} *.js",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run lint && npm run is-prettier && npm run build"
   },
@@ -32,10 +32,10 @@
   ],
   "devDependencies": {
     "@danielberndt/exec": "^1.1.0",
-    "@db-scripts/bundle": "0.1.0",
+    "@db-scripts/bundle": "0.1.1",
     "@db-scripts/eslint-config": "^0.1.3",
     "concurrent-transform": "^1.0.0",
-    "docz": "^0.12.5",
+    "docz": "^0.12.13",
     "docz-plugin-css": "^0.11.0",
     "dotenv": "^6.1.0",
     "eslint": "^5.7.0",
@@ -43,15 +43,15 @@
     "gulp-awspublish": "^3.4.0",
     "gulp-awspublish-router": "^0.2.0",
     "gulp-cloudfront-invalidate-aws-publish": "^1.0.0",
-    "husky": "^1.1.2",
-    "lint-staged": "^7.3.0",
-    "prettier": "^1.14.0"
+    "husky": "^1.2.0",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
+    "@babel/runtime": "^7.1.5",
     "prop-types": "^15.6.2",
     "resize-observer-polyfill": "^1.3.1"
   },
@@ -61,7 +61,7 @@
     }
   },
   "lint-staged": {
-    "*.js": [
+    "{src,docs}/**/*.{js,json,css,mdx} *.js": [
       "npm run prettier",
       "npm run lint",
       "git add"

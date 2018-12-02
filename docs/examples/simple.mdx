@@ -3,10 +3,10 @@ name: Simple
 menu: Examples
 ---
 
-import {Playground} from "docz"
+import {Playground} from "docz";
 import StickyBox from "react-sticky-box";
-import styles from "../ui/styles.module.css"
-import Sidebar from "../ui/Sidebar"
+import styles from "../ui/styles.module.css";
+import Sidebar from "../ui/Sidebar";
 
 # Simple Example
 
@@ -16,7 +16,7 @@ import Sidebar from "../ui/Sidebar"
   <div className={styles.body}>
     <div className={styles.row}>
       <StickyBox offsetTop={20} offsetBottom={20}>
-        <Sidebar/>
+        <Sidebar />
       </StickyBox>
       <div className={styles.content}>Content</div>
     </div>
@@ -29,10 +29,9 @@ import Sidebar from "../ui/Sidebar"
   <div className={styles.body}>
     <div className={styles.row}>
       <StickyBox offsetTop={20} offsetBottom={20} bottom>
-        <Sidebar/>
+        <Sidebar />
       </StickyBox>
       <div className={styles.content}>Content</div>
     </div>
   </div>
 </Playground>
-
