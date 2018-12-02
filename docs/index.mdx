@@ -1,12 +1,12 @@
 ---
 name: React Sticky Box
-route: '/'
+route: "/"
 ---
 
-import {Playground} from "docz"
+import {Playground} from "docz";
 import StickyBox from "react-sticky-box";
-import styles from "./ui/styles.module.css"
-import Sidebar from "./ui/Sidebar"
+import styles from "./ui/styles.module.css";
+import Sidebar from "./ui/Sidebar";
 
 # React Sticky Box
 
@@ -14,24 +14,29 @@ import Sidebar from "./ui/Sidebar"
 
 <div className={styles.bigBody}>
   <div className={styles.row}>
-    <div className={styles.miniContent}/>
+    <div className={styles.miniContent} />
   </div>
   <div className={styles.row}>
     <StickyBox offsetTop={20} offsetBottom={20}>
-      <Sidebar elements={20}/>
+      <Sidebar elements={20} />
     </StickyBox>
-    <div className={styles.largeContent}><p>The sidebar to the left stays in a sticky position.</p>
-      <p>Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes greater than the viewport.</p></div>
+    <div className={styles.largeContent}>
+      <p>The sidebar to the left stays in a sticky position.</p>
+      <p>
+        Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes
+        greater than the viewport.
+      </p>
+    </div>
   </div>
   <div className={styles.row}>
-    <div className={styles.content}/>
+    <div className={styles.content} />
   </div>
 </div>
 
 ## What the Code looks like
 
 ```jsx
-import React from "react"
+import React from "react";
 import StickyBox from "react-sticky-box";
 
 const Page = () => (
@@ -41,13 +46,13 @@ const Page = () => (
     </StickyBox>
     <div>Content</div>
   </div>
-)
+);
 ```
 
 You may also import an es2017 build via
 
 ```jsx
-import StickyBox from "react-sticky-box/dist/esnext"
+import StickyBox from "react-sticky-box/dist/esnext";
 ```
 
 ## How to install
@@ -110,8 +115,9 @@ You still might encounter browser bugs with `position: sticky` if your content l
 ### The StickyBox is not sticky!
 
 Make sure that the `<StickyBox>` is only as high as its content, and not as high as the parent node. To quickly check this you can do:
+
 ```jsx
-<StickyBox style={{border: '3px solid green'}}>content</StickyBox>
+<StickyBox style={{border: "3px solid green"}}>content</StickyBox>
 ```
 
 #### Good
@@ -119,8 +125,8 @@ Make sure that the `<StickyBox>` is only as high as its content, and not as high
 <Playground>
   <div style={{height: 80, overflow: "auto"}}>
     <div style={{display: "flex", alignItems: "flex-start"}}>
-      <StickyBox style={{border: '3px solid green'}}>Sidebar</StickyBox>
-      <div style={{height: 150, border: '3px solid blue'}}>Main Content</div>
+      <StickyBox style={{border: "3px solid green"}}>Sidebar</StickyBox>
+      <div style={{height: 150, border: "3px solid blue"}}>Main Content</div>
     </div>
   </div>
 </Playground>
@@ -132,8 +138,8 @@ This time without `alignItems: "flex-start"`
 <Playground>
   <div style={{height: 80, overflow: "auto"}}>
     <div style={{display: "flex"}}>
-      <StickyBox style={{border: '3px solid green'}}>Sidebar</StickyBox>
-      <div style={{height: 150, border: '3px solid blue'}}>Main Content</div>
+      <StickyBox style={{border: "3px solid green"}}>Sidebar</StickyBox>
+      <div style={{height: 150, border: "3px solid blue"}}>Main Content</div>
     </div>
   </div>
 </Playground>

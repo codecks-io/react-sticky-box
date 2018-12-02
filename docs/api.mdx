@@ -10,16 +10,11 @@ name: Api
 import StickyBox from "react-sticky-box";
 
 <div className="container">
-  <StickyBox
-    bottom={false|true}
-    offsetTop={number}
-    offsetBottom={number}
-    onChangeMode={callback}
-  >
+  <StickyBox bottom={false | true} offsetTop={number} offsetBottom={number} onChangeMode={callback}>
     <div className="sidebar">Sidebar</div>
   </StickyBox>
   <div className="main">Content</div>
-</div>
+</div>;
 ```
 
 ## Props
@@ -39,4 +34,3 @@ import StickyBox from "react-sticky-box";
 - **`onChangeMode={(oldMode, newMode) => {}}`**
 
   This function is called as soon as the content becomes sticky or unsticky again. The possible values for `oldMode` and `newMode` are `relative`, `stickyBottom`, `stickyTop`
-

@@ -33,7 +33,7 @@ name: Changelog
 
 Introducing the `offsetTop` and `offsetBottom` props.
 
-*The `offset` prop is deprecated.* Please use `offsetTop` which has the exact same semantics. `offset` will be removed in v0.8.
+_The `offset` prop is deprecated._ Please use `offsetTop` which has the exact same semantics. `offset` will be removed in v0.8.
 
 ## 0.6.0
 
@@ -46,7 +46,6 @@ Browsers with no `sticky` support will fallback to a `position: "relative"` beha
 Another benefit of the new approach: you don't need to specify the width anymore. Any `StickyBox` will be part of the layout flow like any other `position: "relative"` element would as well.
 
 Performance was another priority. The scroll-handler now contains zero DOM-reads (except for getting the scroll position). Any container or content resize will be detected and handled separately via the [resize-observer-polyfill](https://github.com/que-etc/resize-observer-polyfill).
-
 
 ## 0.5.0
 
