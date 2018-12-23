@@ -31,19 +31,20 @@
     "dist"
   ],
   "devDependencies": {
-    "@danielberndt/exec": "^1.1.0",
+    "@danielberndt/exec": "^1.2.0",
     "@db-scripts/bundle": "0.1.1",
     "@db-scripts/eslint-config": "^0.1.3",
     "concurrent-transform": "^1.0.0",
-    "docz": "^0.12.13",
+    "docz": "^0.13.5",
     "docz-plugin-css": "^0.11.0",
-    "dotenv": "^6.1.0",
-    "eslint": "^5.7.0",
+    "docz-theme-default": "^0.13.5",
+    "dotenv": "^6.2.0",
+    "eslint": "^5.11.0",
     "gulp": "^3.9.1",
     "gulp-awspublish": "^3.4.0",
     "gulp-awspublish-router": "^0.2.0",
     "gulp-cloudfront-invalidate-aws-publish": "^1.0.0",
-    "husky": "^1.2.0",
+    "husky": "^1.2.1",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3"
   },
@@ -53,7 +54,7 @@
   "dependencies": {
     "@babel/runtime": "^7.1.5",
     "prop-types": "^15.6.2",
-    "resize-observer-polyfill": "^1.3.1"
+    "resize-observer-polyfill": "^1.5.1"
   },
   "husky": {
     "hooks": {
