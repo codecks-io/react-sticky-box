@@ -11,7 +11,7 @@ export default {
   menu: [
     "React Sticky Box",
     "Api",
-    {name: "Examples", menu: ["Simple", "Complex", "Full Page"]},
+    {name: "Examples", menu: ["Simple", "Complex", "Full Page", "Debug"]},
     "Changelog",
   ],
 

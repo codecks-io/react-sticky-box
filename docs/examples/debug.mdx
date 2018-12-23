@@ -1,0 +1,35 @@
+---
+name: Debug
+menu: Examples
+---
+
+import {Playground} from "docz";
+import StickyBox from "react-sticky-box";
+import Sidebar from "../ui/Sidebar";
+import CallapsibleContent from "../ui/CallapsibleContent";
+import styles from "../ui/styles.module.css";
+
+# Debug Examples
+
+This sections serves to describe edge cases and making it easier to manually test them.
+
+## Decrease Height of Scroll Container when scrolled down
+
+To reproduce:
+
+- Scroll all the way to the bottom.
+- Expand the Sidebar
+- Collapse the Content Area
+
+**fixed in v0.7.7**
+
+<Playground>
+  <div className={styles.body}>
+    <div className={styles.row}>
+      <StickyBox offsetTop={20} offsetBottom={20}>
+        <Sidebar />
+      </StickyBox>
+      <CallapsibleContent isExpandedInitially />
+    </div>
+  </div>
+</Playground>

@@ -27,6 +27,11 @@
   margin: 0 10px;
 }
 
+.flexibleHeightContent {
+  composes: content;
+  height: initial;
+}
+
 .smallContent {
   composes: content;
   height: 100px;

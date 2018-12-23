@@ -157,8 +157,29 @@ export default class StickyBox extends React.Component {
     const verticalParentPadding = parentPaddingTop + parentPaddingBottom;
     this.naturalTop =
       offsetTill(parentNode, this.scrollPane) + parentPaddingTop + this.scrollPaneOffset;
+    const oldParentHeight = this.parentHeight;
     this.parentHeight = parentNode.getBoundingClientRect().height - verticalParentPadding;
+    if (this.mode === "relative") {
+      // If parent height decreased...
+      if (oldParentHeight > this.parentHeight) {
+        this.changeToStickyBottomIfBoxTooLow(this.latestScrollY);
+      }
+    }
+    if (oldParentHeight !== this.parentHeight && this.mode === "relative") {
+      this.latestScrollY = Number.POSITIVE_INFINITY;
+      this.handleScroll();
+    }
   };
+
+  changeToStickyBottomIfBoxTooLow(scrollY) {
+    const {offsetBottom} = this.getOffsets();
+    if (
+      scrollY + this.scrollPaneOffset + this.viewPortHeight <=
+      this.naturalTop + this.nodeHeight + this.offset + offsetBottom
+    ) {
+      this.switchToStickyBottom();
+    }
+  }
 
   updateNode = ({initial} = {}) => {
     const prevHeight = this.nodeHeight;
@@ -213,12 +234,7 @@ export default class StickyBox extends React.Component {
           }
         }
       } else if (this.mode === "relative") {
-        if (
-          scrollY + this.scrollPaneOffset + this.viewPortHeight >
-          this.naturalTop + this.nodeHeight + this.offset + offsetBottom
-        ) {
-          this.switchToStickyBottom();
-        }
+        this.changeToStickyBottomIfBoxTooLow(scrollY);
       }
     } else {
       // scroll up

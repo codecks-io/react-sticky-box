@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 
 export default class Sidebar extends React.Component {
   state = {
-    isExpanded: false,
+    isExpanded: this.props.isExpandedInitially,
   };
 
   render() {
