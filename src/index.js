@@ -174,7 +174,7 @@ export default class StickyBox extends React.Component {
   changeToStickyBottomIfBoxTooLow(scrollY) {
     const {offsetBottom} = this.getOffsets();
     if (
-      scrollY + this.scrollPaneOffset + this.viewPortHeight <=
+      scrollY + this.scrollPaneOffset + this.viewPortHeight >=
       this.naturalTop + this.nodeHeight + this.offset + offsetBottom
     ) {
       this.switchToStickyBottom();
