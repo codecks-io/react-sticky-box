@@ -28,12 +28,14 @@
   "module": "dist/es/index.js",
   "repository": "danielberndt/react-sticky-box",
   "files": [
-    "dist"
+    "dist",
+    "index.d.ts"
   ],
   "devDependencies": {
     "@danielberndt/exec": "^1.2.0",
     "@db-scripts/bundle": "0.1.1",
     "@db-scripts/eslint-config": "^0.1.3",
+    "@types/react": "^16.7.18",
     "concurrent-transform": "^1.0.0",
     "docz": "^0.13.7",
     "docz-plugin-css": "^0.11.0",
@@ -67,5 +69,6 @@
       "npm run lint",
       "git add"
     ]
-  }
+  },
+  "typings": "./index.d.ts"
 }
