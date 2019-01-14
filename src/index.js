@@ -97,17 +97,9 @@ export default class StickyBox extends React.Component {
     }
   };
 
-  getOffsets() {
-    const {offset: deprecatedOffset, offsetTop: propOffsetTop, offsetBottom} = this.props;
-    return {
-      offsetTop: propOffsetTop || deprecatedOffset,
-      offsetBottom,
-    };
-  }
-
   changeMode(newMode) {
-    const {offsetTop, offsetBottom} = this.getOffsets();
-    this.props.onChangeMode(this.mode, newMode);
+    const {onChangeMode, offsetTop, offsetBottom} = this.props;
+    onChangeMode(this.mode, newMode);
     this.mode = newMode;
     if (newMode === "relative") {
       this.node.style.position = "relative";
@@ -134,7 +126,7 @@ export default class StickyBox extends React.Component {
 
   getCurrentOffset = () => {
     if (this.mode === "relative") return this.offset;
-    const {offsetTop, offsetBottom} = this.getOffsets();
+    const {offsetTop, offsetBottom} = this.props;
     if (this.mode === "stickyTop") {
       return Math.max(0, this.scrollPaneOffset + this.latestScrollY - this.naturalTop + offsetTop);
     }
@@ -150,7 +142,7 @@ export default class StickyBox extends React.Component {
   };
 
   changeToStickyBottomIfBoxTooLow(scrollY) {
-    const {offsetBottom} = this.getOffsets();
+    const {offsetBottom} = this.props;
     if (
       scrollY + this.scrollPaneOffset + this.viewPortHeight >=
       this.naturalTop + this.nodeHeight + this.offset + offsetBottom
@@ -210,7 +202,7 @@ export default class StickyBox extends React.Component {
     const prevHeight = this.nodeHeight;
     this.nodeHeight = this.node.getBoundingClientRect().height;
     if (!initial && prevHeight !== this.nodeHeight) {
-      const {offsetTop, offsetBottom} = this.getOffsets();
+      const {offsetTop, offsetBottom} = this.props;
       if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
         // Just make it sticky if node smaller than viewport
         this.mode = undefined;
@@ -225,7 +217,7 @@ export default class StickyBox extends React.Component {
   };
 
   handleScroll = () => {
-    const {offsetTop, offsetBottom} = this.getOffsets();
+    const {offsetTop, offsetBottom} = this.props;
     const scrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
     if (scrollY === this.latestScrollY) return;
     if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
@@ -287,14 +279,12 @@ export default class StickyBox extends React.Component {
 
 StickyBox.defaultProps = {
   onChangeMode: () => {},
-  offset: 0,
   offsetTop: 0,
   offsetBottom: 0,
 };
 
 StickyBox.propTypes = {
   onChangeMode: PropTypes.func,
-  offset: PropTypes.number, // deprecated
   offsetTop: PropTypes.number,
   offsetBottom: PropTypes.number,
   bottom: PropTypes.bool,
