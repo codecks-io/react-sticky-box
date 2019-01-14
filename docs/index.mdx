@@ -69,7 +69,7 @@ npm install react-sticky-box
 
 React Sticky Box relies on `position: sticky`. It's [widely supported](https://caniuse.com/#feat=css-sticky) these days.
 
-For all browsers without sticky support it falls back to a `position: relative` behaviour which should be a decent enough fallback in most cases.
+For all browsers without sticky support, it falls back to a `position: relative` behaviour. This could be considered "good enough" in a lot of cases. Alternatively you have to provide a custom solution to get sticky behaviour here. Either via polyfills or even targeting IE10+ Browsers via `@media queries` like presented [here](https://github.com/codecks-io/react-sticky-box/issues/30#issuecomment-450153041) by [Olivr3](https://github.com/Olivr3).
 
 `position: sticky` isn't without it's issues though. If the content is bigger than the viewport, it simply gets cut off and becomes inaccessible. This library solves this issue by allowing the content to scroll along with all the other content until the the corresponding end is visible and continues to be sticky.
 
