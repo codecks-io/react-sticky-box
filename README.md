@@ -1,3 +1,8 @@
+![Version](https://badgen.net/npm/v/react-sticky-box)
+![Downloads/Week](https://badgen.net/npm/dw/react-sticky-box)
+![Minified Bundlesize](https://badgen.net/bundlephobia/min/react-sticky-box)
+![Minified Gzipped Bundlesize](https://badgen.net/bundlephobia/minzip/react-sticky-box)
+
 # React Sticky Box
 
 Sticky Boxes with sensible behaviour if the content is bigger than the viewport.
