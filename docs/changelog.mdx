@@ -4,6 +4,10 @@ name: Changelog
 
 # Changelog
 
+## 0.9.0
+
+- Breaking: The `bottom` prop now expects the same treatment as `position: sticky; bottom :0;` in pure css. This means a StickyBox with `bottom={true}` needs to be forced to sit at the bottom of its container. This can be done with e.g. 'align-items: end' on a `flex: row` container, or `margin-top: auto` on the sticky box container itself. Check the examples for some code.
+
 ## 0.8.0
 
 - Removed the deprecated `offset` prop. Use `offsetTop` instead as explained in [0.7.0](#070).

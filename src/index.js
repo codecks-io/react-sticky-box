@@ -98,18 +98,32 @@ export default class StickyBox extends React.Component {
   };
 
   changeMode(newMode) {
-    const {onChangeMode, offsetTop, offsetBottom} = this.props;
-    onChangeMode(this.mode, newMode);
+    const {onChangeMode, offsetTop, offsetBottom, bottom} = this.props;
+    if (this.mode !== newMode) onChangeMode(this.mode, newMode);
     this.mode = newMode;
     if (newMode === "relative") {
       this.node.style.position = "relative";
-      this.node.style.top = `${this.offset}px`;
+      if (bottom) {
+        const nextBottom = Math.max(0, this.parentHeight - this.nodeHeight - this.offset);
+        this.node.style.bottom = `${nextBottom}px`;
+      } else {
+        this.node.style.top = `${this.offset}px`;
+      }
     } else {
       this.node.style.position = stickyProp;
       if (newMode === "stickyBottom") {
-        this.node.style.top = `${this.viewPortHeight - this.nodeHeight - offsetBottom}px`;
+        if (bottom) {
+          this.node.style.bottom = `${offsetBottom}px`;
+        } else {
+          this.node.style.top = `${this.viewPortHeight - this.nodeHeight - offsetBottom}px`;
+        }
       } else {
-        this.node.style.top = `${offsetTop}px`;
+        // stickyTop
+        if (bottom) {
+          this.node.style.bottom = `${this.viewPortHeight - this.nodeHeight - offsetBottom}px`;
+        } else {
+          this.node.style.top = `${offsetTop}px`;
+        }
       }
     }
     this.offset = this.getCurrentOffset();
@@ -154,6 +168,7 @@ export default class StickyBox extends React.Component {
   handleWindowResize = () => {
     this.viewPortHeight = window.innerHeight;
     this.scrollPaneOffset = 0;
+    this.handleScroll();
   };
 
   handleScrollPaneResize = () => {
@@ -170,6 +185,7 @@ export default class StickyBox extends React.Component {
     } else {
       this.scrollPaneOffset = 0;
     }
+    this.handleScroll();
   };
 
   handleParentNodeResize = () => {
@@ -187,9 +203,13 @@ export default class StickyBox extends React.Component {
     this.parentHeight = parentNode.getBoundingClientRect().height - verticalParentPadding;
 
     if (this.mode === "relative") {
-      // If parent height decreased...
-      if (oldParentHeight > this.parentHeight) {
-        this.changeToStickyBottomIfBoxTooLow(this.latestScrollY);
+      if (this.props.bottom) {
+        this.changeMode("relative");
+      } else {
+        // If parent height decreased...
+        if (oldParentHeight > this.parentHeight) {
+          this.changeToStickyBottomIfBoxTooLow(this.latestScrollY);
+        }
       }
     }
     if (oldParentHeight !== this.parentHeight && this.mode === "relative") {

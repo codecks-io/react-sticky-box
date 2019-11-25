@@ -18,6 +18,16 @@
   align-items: flex-start;
 }
 
+.rowAlignEnd {
+  padding: 20px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.selfEnd {
+  align-self: flex-end;
+}
+
 .content {
   background-color: #fff;
   padding: 10px;
