@@ -222,15 +222,17 @@ export default class StickyBox extends React.Component {
     const prevHeight = this.nodeHeight;
     this.nodeHeight = this.node.getBoundingClientRect().height;
     if (!initial && prevHeight !== this.nodeHeight) {
-      const {offsetTop, offsetBottom} = this.props;
+      const {offsetTop, offsetBottom, bottom} = this.props;
       if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
         // Just make it sticky if node smaller than viewport
         this.mode = undefined;
         this.initial();
         return;
       } else {
+        const diff = prevHeight - this.nodeHeight;
         const lowestPossible = this.parentHeight - this.nodeHeight;
-        this.offset = Math.max(0, Math.min(lowestPossible, this.getCurrentOffset()));
+        const nextOffset = Math.min(lowestPossible, this.getCurrentOffset() + (bottom ? diff : 0));
+        this.offset = Math.max(0, nextOffset);
         this.changeMode("relative");
       }
     }
