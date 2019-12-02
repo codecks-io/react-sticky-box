@@ -233,7 +233,7 @@ export default class StickyBox extends React.Component {
         const lowestPossible = this.parentHeight - this.nodeHeight;
         const nextOffset = Math.min(lowestPossible, this.getCurrentOffset() + (bottom ? diff : 0));
         this.offset = Math.max(0, nextOffset);
-        this.changeMode("relative");
+        if (!bottom || this.mode !== "stickyBottom") this.changeMode("relative");
       }
     }
   };
