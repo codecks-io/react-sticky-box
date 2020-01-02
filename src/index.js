@@ -62,7 +62,7 @@ export default class StickyBox extends React.Component {
     this.node = n;
     if (n) {
       this.scrollPane = getScrollParent(this.node);
-      this.latestScrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
+      this.latestScrollY = this.scrollPane === window || !this.scrollPane ? window.scrollY : this.scrollPane.scrollTop;
 
       this.scrollPane.addEventListener("scroll", this.handleScroll, passiveArg);
       this.scrollPane.addEventListener("mousewheel", this.handleScroll, passiveArg);
