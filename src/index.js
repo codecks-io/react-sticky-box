@@ -57,6 +57,10 @@ export default class StickyBox extends React.Component {
     }
   }
 
+  componentWillUnmount(){
+    this.registerContainerRef(null);
+  }
+
   registerContainerRef = n => {
     if (!stickyProp) return;
     this.node = n;
