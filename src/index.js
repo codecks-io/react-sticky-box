@@ -55,7 +55,19 @@ export default class StickyBox extends React.Component {
         `react-sticky-box's "offset" prop is deprecated. Please use "offsetTop" instead. It'll be removed in v0.8.`
       );
     }
+    this.unsubscribes = [];
   }
+
+  addListener = (element, event, handler, passive) => {
+    element.addEventListener(event, handler, passive);
+    this.unsubscribes.push(() => element.removeEventListener(event, handler));
+  };
+
+  addResizeObserver = (node, handler) => {
+    const ro = new ResizeObserver(handler);
+    ro.observe(node);
+    this.unsubscribes.push(() => ro.disconnect());
+  };
 
   registerContainerRef = n => {
     if (!stickyProp) return;
@@ -64,35 +76,25 @@ export default class StickyBox extends React.Component {
       this.scrollPane = getScrollParent(this.node);
       this.latestScrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
 
-      this.scrollPane.addEventListener("scroll", this.handleScroll, passiveArg);
-      this.scrollPane.addEventListener("mousewheel", this.handleScroll, passiveArg);
+      this.addListener(this.scrollPane, "scroll", this.handleScroll, passiveArg);
+      this.addListener(this.scrollPane, "mousewheel", this.handleScroll, passiveArg);
       if (this.scrollPane === window) {
-        window.addEventListener("resize", this.handleWindowResize);
+        this.addListener(window, "resize", this.handleWindowResize);
         this.handleWindowResize();
       } else {
-        this.rosp = new ResizeObserver(this.handleScrollPaneResize);
-        this.rosp.observe(this.scrollPane);
+        this.addResizeObserver(this.scrollPane, this.handleScrollPaneResize);
         this.handleScrollPaneResize();
       }
-      this.ropn = new ResizeObserver(this.handleParentNodeResize);
-      this.ropn.observe(this.node.parentNode);
+      this.addResizeObserver(this.node.parentNode, this.handleParentNodeResize);
       this.handleParentNodeResize();
 
-      this.ron = new ResizeObserver(this.handleNodeResize);
-      this.ron.observe(this.node);
+      this.addResizeObserver(this.node, this.handleNodeResize);
       this.handleNodeResize({initial: true});
 
       this.initial();
     } else {
-      this.scrollPane.removeEventListener("mousewheel", this.handleScroll, passiveArg);
-      this.scrollPane.removeEventListener("scroll", this.handleScroll, passiveArg);
-      if (this.scrollPane === window) {
-        window.removeEventListener("resize", this.getMeasurements);
-      } else {
-        this.rosp.disconnect();
-      }
-      this.ropn.disconnect();
-      this.ron.disconnect();
+      this.unsubscribes.forEach(fn => fn());
+      this.unsubscribes = [];
       this.scrollPane = null;
     }
   };
