@@ -63,6 +63,7 @@ export default class StickyBox extends React.Component {
 
   registerContainerRef = n => {
     if (!stickyProp) return;
+    var oldNode = this.node;
     this.node = n;
     if (n) {
       this.scrollPane = getScrollParent(this.node);
@@ -88,9 +89,11 @@ export default class StickyBox extends React.Component {
 
       this.initial();
     } else {
-      this.scrollPane.removeEventListener("mousewheel", this.handleScroll, passiveArg);
-      this.scrollPane.removeEventListener("scroll", this.handleScroll, passiveArg);
-      if (this.scrollPane === window) {
+      if (!oldNode) return;
+      var oldPane = getScrollParent(oldNode);
+      oldPane.removeEventListener("mousewheel", this.handleScroll, passiveArg);
+      oldPane.removeEventListener("scroll", this.handleScroll, passiveArg);
+      if (oldPane === window) {
         window.removeEventListener("resize", this.getMeasurements);
       } else {
         this.rosp.disconnect();
