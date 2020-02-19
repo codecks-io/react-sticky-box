@@ -1,12 +1,12 @@
 {
   "dist/react-sticky-box.umd.js": {
-    "bundled": 48494,
-    "minified": 14000,
-    "gzipped": 4231
+    "bundled": 48612,
+    "minified": 14034,
+    "gzipped": 4247
   },
   "dist/react-sticky-box.umd.min.js": {
-    "bundled": 13645,
-    "minified": 13593,
-    "gzipped": 4054
+    "bundled": 13679,
+    "minified": 13627,
+    "gzipped": 4069
   }
 }
