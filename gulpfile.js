@@ -12,9 +12,12 @@ const CONFIG = {
 };
 
 gulp.task("build", () => exec("yarn docz:build"));
-gulp.task("build-and-move-assets", ["build"], () => {
-  return gulp.src([CONFIG.favicon, CONFIG.robots]).pipe(gulp.dest(CONFIG.dist));
-});
+gulp.task(
+  "build-and-move-assets",
+  gulp.parallel("build", () => {
+    return gulp.src([CONFIG.favicon, CONFIG.robots]).pipe(gulp.dest(CONFIG.dist));
+  })
+);
 
 const deployCmd = envFile => () => {
   if (envFile) require("dotenv").config({path: envFile});
@@ -60,6 +63,5 @@ const deployCmd = envFile => () => {
   );
 };
 
-gulp.task("load-env");
-gulp.task("deploy", ["build-and-move-assets"], deployCmd(".env"));
-gulp.task("deploy-from-ci", ["build-and-move-assets"], deployCmd());
+gulp.task("deploy", gulp.series("build-and-move-assets", deployCmd(".env")));
+gulp.task("deploy-from-ci", gulp.series("build-and-move-assets", deployCmd()));
