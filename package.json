@@ -32,27 +32,27 @@
     "index.d.ts"
   ],
   "devDependencies": {
-    "@danielberndt/exec": "^1.2.0",
-    "@db-scripts/bundle": "0.1.1",
-    "@db-scripts/eslint-config": "^0.1.3",
-    "@types/react": "^16.7.18",
+    "@danielberndt/exec": "^1.2.1",
+    "@db-scripts/bundle": "0.2.5",
+    "@db-scripts/eslint-config": "^0.2.3",
+    "@types/react": "^16.9.23",
     "concurrent-transform": "^1.0.0",
-    "docz": "^0.13.7",
-    "docz-plugin-css": "^0.11.0",
-    "docz-theme-default": "^0.13.5",
-    "dotenv": "^6.2.0",
-    "eslint": "^5.11.0",
-    "gulp": "^3.9.1",
+    "docz": "^2.2.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "gulp": "^4.0.2",
     "gulp-awspublish": "^3.4.0",
     "gulp-awspublish-router": "^0.2.0",
     "gulp-cloudfront-invalidate-aws-publish": "^1.0.0",
-    "husky": "^1.2.1",
-    "lint-staged": "^8.1.0",
-    "prettier": "^1.15.3"
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "prettier": "^1.19.1",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
-    "prop-types": "^15.6.2"
+    "prop-types": "^15.6.2",
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
