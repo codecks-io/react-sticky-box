@@ -10,9 +10,9 @@
     "docz:build": "docz build",
     "docz:deploy": "gulp deploy",
     "docz:deploy-from-ci": "gulp deploy-from-ci",
-    "is-prettier": "prettier --list-different './{src,docs}/**/*.{js,json,css,mdx}' './*.js'",
+    "is-prettier": "prettier --list-different './{src,docs}/**/*.{js,json,css}' './*.js'",
     "prettier": "prettier --write",
-    "prettier:all": "prettier --write '{src,docs}/**/*.{js,json,css,mdx}' '*.js'",
+    "prettier:all": "prettier --write '{src,docs}/**/*.{js,json,css}' '*.js'",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run lint && npm run is-prettier && npm run build"
   },
