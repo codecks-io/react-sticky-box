@@ -52,7 +52,7 @@
   },
   "peerDependencies": {
     "prop-types": "^15.6.2",
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
