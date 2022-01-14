@@ -1,7 +1,4 @@
 .env
-.docz
-.awspublish-*
 !.gitignore
 node_modules/
-*.sublime-*
 dist/
