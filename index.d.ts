@@ -1,30 +1,18 @@
 import * as React from "react";
-import ResizeObserver from "resize-observer-polyfill";
 
-export type StickyBoxMode = "relative" | "stickyBottom" | "stickyTop";
-
-interface StickyBoxProps {
+type UseStickyBoxOptions = {
   offsetTop?: number;
   offsetBottom?: number;
   bottom?: boolean;
-  onChangeMode?: (oldMode: StickyBoxMode | undefined, newMode: StickyBoxMode) => any;
+};
+
+type StickyBoxCompProps = UseStickyBoxOptions & {
   style?: React.CSSProperties;
   className?: string;
   children: React.ReactNode;
-}
+};
 
-export interface StickyBoxInstance {
-  mode: StickyBoxMode;
-  node: HTMLElement;
-  scrollPane: HTMLElement | Window;
-  parentHeight: number;
-  naturalTop: number;
-  nodeHeight: number;
-  viewportHeight: number;
-  offset: number;
-  latestScrollY: number;
-}
+type useStickyBox = <T = any>(options?: UseStickyBoxOptions) => React.RefCallback<T>;
+type StickyBoxComp = React.FunctionComponent<StickyBoxCompProps>;
 
-declare const IStickyBox: React.ComponentClass<StickyBoxProps>;
-
-export {IStickyBox as default};
+export {StickyBoxComp as default, useStickyBox, StickyBoxCompProps, UseStickyBoxOptions};

@@ -1,5 +1,4 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, {useEffect, useRef, useState} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 
 const getScrollParent = node => {
@@ -47,151 +46,153 @@ try {
   window.removeEventListener("testPassive", null, opts);
 } catch (e) {}
 
-export default class StickyBox extends React.Component {
-  constructor(props) {
-    super(props);
-    if (props.offset && process.env.NODE_ENV !== "production") {
-      console.warn(
-        `react-sticky-box's "offset" prop is deprecated. Please use "offsetTop" instead. It'll be removed in v0.8.`
+const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
+  const scrollPane = getScrollParent(node);
+  let latestScrollY = scrollPane === window ? window.scrollY : scrollPane.scrollTop;
+
+  const unsubs = [];
+  let mode, offset, nodeHeight, naturalTop, parentHeight, scrollPaneOffset, viewPortHeight;
+
+  const getCurrentOffset = () => {
+    if (mode === "relative") return offset;
+    if (mode === "stickyTop") {
+      return Math.max(0, scrollPaneOffset + latestScrollY - naturalTop + offsetTop);
+    }
+    if (mode === "stickyBottom") {
+      return Math.max(
+        0,
+        scrollPaneOffset + latestScrollY + viewPortHeight - (naturalTop + nodeHeight + offsetBottom)
       );
     }
-    this.unsubscribes = [];
-  }
-
-  addListener = (element, event, handler, passive) => {
-    element.addEventListener(event, handler, passive);
-    this.unsubscribes.push(() => element.removeEventListener(event, handler));
   };
 
-  addResizeObserver = (node, handler) => {
-    const ro = new ResizeObserver(handler);
-    ro.observe(node);
-    this.unsubscribes.push(() => ro.disconnect());
-  };
-
-  registerContainerRef = n => {
-    if (!stickyProp) return;
-    this.node = n;
-    if (n) {
-      this.scrollPane = getScrollParent(this.node);
-      this.latestScrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
-
-      this.addListener(this.scrollPane, "scroll", this.handleScroll, passiveArg);
-      this.addListener(this.scrollPane, "mousewheel", this.handleScroll, passiveArg);
-      if (this.scrollPane === window) {
-        this.addListener(window, "resize", this.handleWindowResize);
-        this.handleWindowResize();
-      } else {
-        this.addResizeObserver(this.scrollPane, this.handleScrollPaneResize);
-        this.handleScrollPaneResize();
-      }
-      this.addResizeObserver(this.node.parentNode, this.handleParentNodeResize);
-      this.handleParentNodeResize();
-
-      this.addResizeObserver(this.node, this.handleNodeResize);
-      this.handleNodeResize({initial: true});
-
-      this.initial();
-    } else {
-      this.unsubscribes.forEach(fn => fn());
-      this.unsubscribes = [];
-      this.scrollPane = null;
+  const changeToStickyBottomIfBoxTooLow = scrollY => {
+    if (
+      scrollY + scrollPaneOffset + viewPortHeight >=
+      naturalTop + nodeHeight + offset + offsetBottom
+    ) {
+      changeMode("stickyBottom");
     }
   };
 
-  changeMode(newMode) {
-    const {onChangeMode, offsetTop, offsetBottom, bottom} = this.props;
-    if (this.mode !== newMode) onChangeMode(this.mode, newMode);
-    this.mode = newMode;
+  const changeMode = newMode => {
+    mode = newMode;
     if (newMode === "relative") {
-      this.node.style.position = "relative";
+      node.style.position = "relative";
       if (bottom) {
-        const nextBottom = Math.max(0, this.parentHeight - this.nodeHeight - this.offset);
-        this.node.style.bottom = `${nextBottom}px`;
+        const nextBottom = Math.max(0, parentHeight - nodeHeight - offset);
+        node.style.bottom = `${nextBottom}px`;
       } else {
-        this.node.style.top = `${this.offset}px`;
+        node.style.top = `${offset}px`;
       }
     } else {
-      this.node.style.position = stickyProp;
+      node.style.position = stickyProp;
       if (newMode === "stickyBottom") {
         if (bottom) {
-          this.node.style.bottom = `${offsetBottom}px`;
+          node.style.bottom = `${offsetBottom}px`;
         } else {
-          this.node.style.top = `${this.viewPortHeight - this.nodeHeight - offsetBottom}px`;
+          node.style.top = `${viewPortHeight - nodeHeight - offsetBottom}px`;
         }
       } else {
         // stickyTop
         if (bottom) {
-          this.node.style.bottom = `${this.viewPortHeight - this.nodeHeight - offsetBottom}px`;
+          node.style.bottom = `${viewPortHeight - nodeHeight - offsetBottom}px`;
         } else {
-          this.node.style.top = `${offsetTop}px`;
+          node.style.top = `${offsetTop}px`;
         }
       }
     }
-    this.offset = this.getCurrentOffset();
-  }
+    offset = getCurrentOffset();
+  };
 
-  initial() {
-    const {bottom} = this.props;
+  const initial = () => {
     if (bottom) {
-      if (this.mode !== "stickyBottom") this.changeMode("stickyBottom");
+      if (mode !== "stickyBottom") changeMode("stickyBottom");
     } else {
-      if (this.mode !== "stickyTop") this.changeMode("stickyTop");
-    }
-  }
-
-  getCurrentOffset = () => {
-    if (this.mode === "relative") return this.offset;
-    const {offsetTop, offsetBottom} = this.props;
-    if (this.mode === "stickyTop") {
-      return Math.max(0, this.scrollPaneOffset + this.latestScrollY - this.naturalTop + offsetTop);
-    }
-    if (this.mode === "stickyBottom") {
-      return Math.max(
-        0,
-        this.scrollPaneOffset +
-          this.latestScrollY +
-          this.viewPortHeight -
-          (this.naturalTop + this.nodeHeight + offsetBottom)
-      );
+      if (mode !== "stickyTop") changeMode("stickyTop");
     }
   };
 
-  changeToStickyBottomIfBoxTooLow(scrollY) {
-    const {offsetBottom} = this.props;
-    if (
-      scrollY + this.scrollPaneOffset + this.viewPortHeight >=
-      this.naturalTop + this.nodeHeight + this.offset + offsetBottom
-    ) {
-      this.changeMode("stickyBottom");
-    }
-  }
-
-  handleWindowResize = () => {
-    this.viewPortHeight = window.innerHeight;
-    this.scrollPaneOffset = 0;
-    this.handleScroll();
+  const addListener = (element, event, handler, passive) => {
+    element.addEventListener(event, handler, passive);
+    unsubs.push(() => element.removeEventListener(event, handler));
   };
 
-  handleScrollPaneResize = () => {
-    this.viewPortHeight = this.scrollPane.offsetHeight;
-    if (process.env.NODE_ENV !== "production" && this.viewPortHeight === 0) {
+  const handleScroll = () => {
+    const scrollY = scrollPane === window ? window.scrollY : scrollPane.scrollTop;
+    if (scrollY === latestScrollY) return;
+    if (nodeHeight + offsetTop + offsetBottom <= viewPortHeight) {
+      // Just make it sticky if node smaller than viewport
+      initial();
+      latestScrollY = scrollY;
+      return;
+    }
+    const scrollDelta = scrollY - latestScrollY;
+    offset = getCurrentOffset();
+    if (scrollDelta > 0) {
+      // scroll down
+      if (mode === "stickyTop") {
+        if (scrollY + scrollPaneOffset + offsetTop > naturalTop) {
+          if (
+            scrollY + scrollPaneOffset + viewPortHeight <=
+            naturalTop + nodeHeight + offset + offsetBottom
+          ) {
+            changeMode("relative");
+          } else {
+            changeMode("stickyBottom");
+          }
+        }
+      } else if (mode === "relative") {
+        changeToStickyBottomIfBoxTooLow(scrollY);
+      }
+    } else {
+      // scroll up
+      if (mode === "stickyBottom") {
+        if (
+          scrollPaneOffset + scrollY + viewPortHeight <
+          naturalTop + parentHeight + offsetBottom
+        ) {
+          if (scrollPaneOffset + scrollY + offsetTop >= naturalTop + offset) {
+            changeMode("relative");
+          } else {
+            changeMode("stickyTop");
+          }
+        }
+      } else if (mode === "relative") {
+        if (scrollPaneOffset + scrollY + offsetTop < naturalTop + offset) {
+          changeMode("stickyTop");
+        }
+      }
+    }
+
+    latestScrollY = scrollY;
+  };
+
+  const handleWindowResize = () => {
+    viewPortHeight = window.innerHeight;
+    scrollPaneOffset = 0;
+    handleScroll();
+  };
+
+  const handleScrollPaneResize = () => {
+    viewPortHeight = scrollPane.offsetHeight;
+    if (process.env.NODE_ENV !== "production" && viewPortHeight === 0) {
       console.warn(
         `react-sticky-box's scroll pane has a height of 0. This seems odd. Please check this node:`,
-        this.scrollPane
+        scrollPane
       );
     }
     // Only applicable if scrollPane is an offsetParent
-    if (this.scrollPane.firstChild.offsetParent === this.scrollPane) {
-      this.scrollPaneOffset = this.scrollPane.getBoundingClientRect().top;
+    if (scrollPane.firstChild.offsetParent === scrollPane) {
+      scrollPaneOffset = scrollPane.getBoundingClientRect().top;
     } else {
-      this.scrollPaneOffset = 0;
+      scrollPaneOffset = 0;
     }
-    this.handleScroll();
+    handleScroll();
   };
 
-  handleParentNodeResize = () => {
-    const parentNode = this.node.parentNode;
+  const handleParentNodeResize = () => {
+    const parentNode = node.parentNode;
     const computedParentStyle = getComputedStyle(parentNode, null);
     const parentPaddingTop = parseInt(computedParentStyle.getPropertyValue("padding-top"), 10);
     const parentPaddingBottom = parseInt(
@@ -199,117 +200,91 @@ export default class StickyBox extends React.Component {
       10
     );
     const verticalParentPadding = parentPaddingTop + parentPaddingBottom;
-    this.naturalTop =
-      offsetTill(parentNode, this.scrollPane) + parentPaddingTop + this.scrollPaneOffset;
-    const oldParentHeight = this.parentHeight;
-    this.parentHeight = parentNode.getBoundingClientRect().height - verticalParentPadding;
+    naturalTop = offsetTill(parentNode, scrollPane) + parentPaddingTop + scrollPaneOffset;
+    const oldParentHeight = parentHeight;
+    parentHeight = parentNode.getBoundingClientRect().height - verticalParentPadding;
 
-    if (this.mode === "relative") {
-      if (this.props.bottom) {
-        this.changeMode("relative");
+    if (mode === "relative") {
+      if (bottom) {
+        changeMode("relative");
       } else {
         // If parent height decreased...
-        if (oldParentHeight > this.parentHeight) {
-          this.changeToStickyBottomIfBoxTooLow(this.latestScrollY);
+        if (oldParentHeight > parentHeight) {
+          changeToStickyBottomIfBoxTooLow(latestScrollY);
         }
       }
     }
-    if (oldParentHeight !== this.parentHeight && this.mode === "relative") {
-      this.latestScrollY = Number.POSITIVE_INFINITY;
-      this.handleScroll();
+    if (oldParentHeight !== parentHeight && mode === "relative") {
+      latestScrollY = Number.POSITIVE_INFINITY;
+      handleScroll();
     }
   };
 
-  handleNodeResize = ({initial} = {}) => {
-    const prevHeight = this.nodeHeight;
-    this.nodeHeight = this.node.getBoundingClientRect().height;
-    if (!initial && prevHeight !== this.nodeHeight) {
-      const {offsetTop, offsetBottom, bottom} = this.props;
-      if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
+  const handleNodeResize = ({initialArg} = {}) => {
+    const prevHeight = nodeHeight;
+    nodeHeight = node.getBoundingClientRect().height;
+    if (!initialArg && prevHeight !== nodeHeight) {
+      if (nodeHeight + offsetTop + offsetBottom <= viewPortHeight) {
         // Just make it sticky if node smaller than viewport
-        this.mode = undefined;
-        this.initial();
+        mode = undefined;
+        initial();
         return;
       } else {
-        const diff = prevHeight - this.nodeHeight;
-        const lowestPossible = this.parentHeight - this.nodeHeight;
-        const nextOffset = Math.min(lowestPossible, this.getCurrentOffset() + (bottom ? diff : 0));
-        this.offset = Math.max(0, nextOffset);
-        if (!bottom || this.mode !== "stickyBottom") this.changeMode("relative");
+        const diff = prevHeight - nodeHeight;
+        const lowestPossible = parentHeight - nodeHeight;
+        const nextOffset = Math.min(lowestPossible, getCurrentOffset() + (bottom ? diff : 0));
+        offset = Math.max(0, nextOffset);
+        if (!bottom || mode !== "stickyBottom") changeMode("relative");
       }
     }
   };
 
-  handleScroll = () => {
-    const {offsetTop, offsetBottom} = this.props;
-    const scrollY = this.scrollPane === window ? window.scrollY : this.scrollPane.scrollTop;
-    if (scrollY === this.latestScrollY) return;
-    if (this.nodeHeight + offsetTop + offsetBottom <= this.viewPortHeight) {
-      // Just make it sticky if node smaller than viewport
-      this.initial();
-      this.latestScrollY = scrollY;
-      return;
-    }
-    const scrollDelta = scrollY - this.latestScrollY;
-    this.offset = this.getCurrentOffset();
-    if (scrollDelta > 0) {
-      // scroll down
-      if (this.mode === "stickyTop") {
-        if (scrollY + this.scrollPaneOffset + offsetTop > this.naturalTop) {
-          if (
-            scrollY + this.scrollPaneOffset + this.viewPortHeight <=
-            this.naturalTop + this.nodeHeight + this.offset + offsetBottom
-          ) {
-            this.changeMode("relative");
-          } else {
-            this.changeMode("stickyBottom");
-          }
-        }
-      } else if (this.mode === "relative") {
-        this.changeToStickyBottomIfBoxTooLow(scrollY);
-      }
-    } else {
-      // scroll up
-      if (this.mode === "stickyBottom") {
-        if (
-          this.scrollPaneOffset + scrollY + this.viewPortHeight <
-          this.naturalTop + this.parentHeight + offsetBottom
-        ) {
-          if (this.scrollPaneOffset + scrollY + offsetTop >= this.naturalTop + this.offset) {
-            this.changeMode("relative");
-          } else {
-            this.changeMode("stickyTop");
-          }
-        }
-      } else if (this.mode === "relative") {
-        if (this.scrollPaneOffset + scrollY + offsetTop < this.naturalTop + this.offset) {
-          this.changeMode("stickyTop");
-        }
-      }
-    }
-
-    this.latestScrollY = scrollY;
+  const addResizeObserver = (n, handler) => {
+    const ro = new ResizeObserver(handler);
+    ro.observe(n);
+    unsubs.push(() => ro.disconnect());
   };
 
-  render() {
-    const {children, className, style} = this.props;
-    return (
-      <div className={className} style={style} ref={this.registerContainerRef}>
-        {children}
-      </div>
-    );
+  addListener(scrollPane, "scroll", handleScroll, passiveArg);
+  addListener(scrollPane, "mousewheel", handleScroll, passiveArg);
+  if (scrollPane === window) {
+    addListener(window, "resize", handleWindowResize);
+    handleWindowResize();
+  } else {
+    addResizeObserver(scrollPane, handleScrollPaneResize);
+    handleScrollPaneResize();
   }
-}
+  addResizeObserver(node.parentNode, handleParentNodeResize);
+  handleParentNodeResize();
 
-StickyBox.defaultProps = {
-  onChangeMode: () => {},
-  offsetTop: 0,
-  offsetBottom: 0,
+  addResizeObserver(node, handleNodeResize);
+  handleNodeResize({initial: true});
+
+  initial();
+
+  return () => unsubs.forEach(fn => fn());
 };
 
-StickyBox.propTypes = {
-  onChangeMode: PropTypes.func,
-  offsetTop: PropTypes.number,
-  offsetBottom: PropTypes.number,
-  bottom: PropTypes.bool,
+export const useStickyBox = ({offsetTop = 0, offsetBottom = 0, bottom = false} = {}) => {
+  const [node, setNode] = useState(null);
+  const argRef = useRef({offsetTop, offsetBottom, bottom});
+  useEffect(() => {
+    argRef.current = {offsetTop, offsetBottom, bottom};
+  });
+  useEffect(() => {
+    if (!node) return;
+    return registerNode(node, argRef.current);
+  }, [node]);
+  return setNode;
 };
+
+const StickyBox = ({offset, offsetBottom, bottom, children, className, style}) => {
+  const ref = useStickyBox({offset, offsetBottom, bottom});
+  return (
+    <div className={className} style={style} ref={ref}>
+      {children}
+    </div>
+  );
+};
+
+export default StickyBox;
