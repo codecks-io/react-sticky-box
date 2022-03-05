@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 
-const getScrollParent = node => {
+const getScrollParent = (node) => {
   let parent = node;
   while ((parent = parent.parentElement)) {
     const overflowYVal = getComputedStyle(parent, null).getPropertyValue("overflow-y");
@@ -25,6 +25,16 @@ const offsetTill = (node, target) => {
     current = current.offsetParent;
   } while (current && current !== target);
   return offset;
+};
+
+const getParentNode = (node) => {
+  let currentParent = node.parentNode;
+  while (currentParent) {
+    const style = getComputedStyle(currentParent, null);
+    if (style.getPropertyValue("display") !== "contents") break;
+    currentParent = currentParent.parentNode;
+  }
+  return currentParent || window;
 };
 
 let stickyProp = null;
@@ -66,7 +76,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
     }
   };
 
-  const changeToStickyBottomIfBoxTooLow = scrollY => {
+  const changeToStickyBottomIfBoxTooLow = (scrollY) => {
     if (
       scrollY + scrollPaneOffset + viewPortHeight >=
       naturalTop + nodeHeight + offset + offsetBottom
@@ -75,7 +85,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
     }
   };
 
-  const changeMode = newMode => {
+  const changeMode = (newMode) => {
     mode = newMode;
     if (newMode === "relative") {
       node.style.position = "relative";
@@ -192,7 +202,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
   };
 
   const handleParentNodeResize = () => {
-    const parentNode = node.parentNode;
+    const parentNode = getParentNode(node);
     const computedParentStyle = getComputedStyle(parentNode, null);
     const parentPaddingTop = parseInt(computedParentStyle.getPropertyValue("padding-top"), 10);
     const parentPaddingBottom = parseInt(
@@ -220,7 +230,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
     }
   };
 
-  const handleNodeResize = ({initialArg} = {}) => {
+  const handleNodeResize = ({initial: initialArg} = {}) => {
     const prevHeight = nodeHeight;
     nodeHeight = node.getBoundingClientRect().height;
     if (!initialArg && prevHeight !== nodeHeight) {
@@ -254,7 +264,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
     addResizeObserver(scrollPane, handleScrollPaneResize);
     handleScrollPaneResize();
   }
-  addResizeObserver(node.parentNode, handleParentNodeResize);
+  addResizeObserver(getParentNode(node), handleParentNodeResize);
   handleParentNodeResize();
 
   addResizeObserver(node, handleNodeResize);
@@ -262,7 +272,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
 
   initial();
 
-  return () => unsubs.forEach(fn => fn());
+  return () => unsubs.forEach((fn) => fn());
 };
 
 export const useStickyBox = ({offsetTop = 0, offsetBottom = 0, bottom = false} = {}) => {
@@ -278,8 +288,8 @@ export const useStickyBox = ({offsetTop = 0, offsetBottom = 0, bottom = false} =
   return setNode;
 };
 
-const StickyBox = ({offset, offsetBottom, bottom, children, className, style}) => {
-  const ref = useStickyBox({offset, offsetBottom, bottom});
+const StickyBox = ({offsetTop, offsetBottom, bottom, children, className, style}) => {
+  const ref = useStickyBox({offsetTop, offsetBottom, bottom});
   return (
     <div className={className} style={style} ref={ref}>
       {children}

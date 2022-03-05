@@ -1,0 +1,11 @@
+---
+import {CodeBox, CodeBoxResult, CodeBoxCode} from './ui.jsx'
+---
+<CodeBox>
+  <CodeBoxResult size={Astro.props.size}>
+    <slot name="result"/>
+  </CodeBoxResult>
+  <CodeBoxCode>
+    <slot/>
+  </CodeBoxCode>
+</CodeBox>

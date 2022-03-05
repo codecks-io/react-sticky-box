@@ -1,37 +1,34 @@
 ---
-name: React Sticky Box
-route: "/"
+title: react-sticky-box documentation
+layout: ../layouts/MainLayout.astro
+setup: |
+  import {Body, Row, Content} from '../components/ui.jsx'
+  import {StickySidebar, StickyWord} from '../components/Sidebar.jsx'
+  import CodeSample from '../components/CodeSample.astro'
 ---
-
-import {Playground} from "docz";
-import StickyBox from "react-sticky-box";
-import styles from "./ui/styles.module.css";
-import Sidebar from "./ui/Sidebar";
 
 # React Sticky Box
 
 ## See it in Action
 
-<div className={styles.bigBody}>
-  <div className={styles.row}>
-    <div className={styles.miniContent} />
-  </div>
-  <div className={styles.row}>
-    <StickyBox offsetTop={20} offsetBottom={20}>
-      <Sidebar elements={20} />
-    </StickyBox>
-    <div className={styles.largeContent}>
-      <p>The sidebar to the left stays in a sticky position.</p>
-      <p>
-        Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes
-        greater than the viewport.
-      </p>
-    </div>
-  </div>
-  <div className={styles.row}>
-    <div className={styles.content} />
-  </div>
-</div>
+<Body big>
+	<Row>
+		<Content size="xs" />
+	</Row>
+	<Row>
+		<StickySidebar offsetTop={20} offsetBottom={20} elements={20} client:idle />
+		<Content size="lg">
+			<p>The sidebar to the left stays in a sticky position.</p>
+			<p>
+				Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes
+				greater than the viewport.
+			</p>
+		</Content>
+	</Row>
+	<Row>
+		<Content size="md" />
+	</Row>
+</Body>
 
 ## What the Code looks like
 
@@ -47,12 +44,6 @@ const Page = () => (
     <div>Content</div>
   </div>
 );
-```
-
-You may also import an es2017 build via
-
-```jsx
-import StickyBox from "react-sticky-box/dist/esnext";
 ```
 
 ## How to install
@@ -92,9 +83,11 @@ You still might encounter browser bugs with `position: sticky` if your content l
 
 ```jsx
 <div style={{height: 200, position: "relative", overflow: "auto"}}>
-  <div style={{position: "absolute", top: 0, left: 0, minHeight: "100%"}}>
-    <StickyBox>Sidebar</StickyBox>
-    <div>Main Content</div>
+  <div style={{position: "absolute", top: 0, left: 0, right: 0, minHeight: "100%"}}>
+    <div style={{display: "flex", alignItems: "flex-start"}}>
+      <StickyBox>Sidebar</StickyBox>
+      <div>Main Content</div>
+    </div>
   </div>
 </div>
 ```
@@ -122,27 +115,41 @@ Make sure that the `<StickyBox>` is only as high as its content, and not as high
 
 #### Good
 
-<Playground>
-  <div style={{height: 80, overflow: "auto"}}>
-    <div style={{display: "flex", alignItems: "flex-start"}}>
-      <StickyBox style={{border: "3px solid green"}}>Sidebar</StickyBox>
-      <div style={{height: 150, border: "3px solid blue"}}>Main Content</div>
-    </div>
-  </div>
-</Playground>
+<CodeSample size="sm">
+
+<div style="display: flex; align-items: flex-start;" slot="result">
+  <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle/>
+  <div style="height: 150px; border: 3px solid blue;">Main Content</div>
+</div>
+
+```jsx
+<div style={{display: "flex", alignItems: "flex-start"}}>
+  <StickyBox style={{border: "3px solid green"}}>Sidebar</StickyBox>
+  <div style={{height: 150, border: "3px solid blue"}}>Main Content</div>
+</div>
+```
+
+</CodeSample>
 
 #### Bad
 
 This time without `alignItems: "flex-start"`
 
-<Playground>
-  <div style={{height: 80, overflow: "auto"}}>
-    <div style={{display: "flex"}}>
-      <StickyBox style={{border: "3px solid green"}}>Sidebar</StickyBox>
-      <div style={{height: 150, border: "3px solid blue"}}>Main Content</div>
-    </div>
-  </div>
-</Playground>
+<CodeSample size="sm">
+
+<div style="display: flex;" slot="result">
+  <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle/>
+  <div style="height: 150px; border: 3px solid blue;">Main Content</div>
+</div>
+
+```jsx
+<div style={{display: "flex"}}>
+  <StickyBox style={{border: "3px solid green"}}>Sidebar</StickyBox>
+  <div style={{height: 150, border: "3px solid blue"}}>Main Content</div>
+</div>
+```
+
+</CodeSample>
 
 ## Is this production-ready?
 

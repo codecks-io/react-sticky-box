@@ -1,0 +1,35 @@
+{
+  "name": "react-sticky-box",
+  "version": "0.9.3",
+  "description": "Boxes that behave nicely while scrolling",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --max-warnings=0 src docs *.js",
+    "build": "node build.js"
+  },
+  "keywords": [
+    "react",
+    "scroll",
+    "sticky",
+    "fixed"
+  ],
+  "author": "Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/)",
+  "license": "ISC",
+  "repository": "danielberndt/react-sticky-box",
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "dependencies": {
+    "resize-observer-polyfill": "^1.5.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.25"
+  },
+  "module": "src/index.jsx",
+  "main": "dist/index.js",
+  "typings": "./index.d.ts",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ]
+}

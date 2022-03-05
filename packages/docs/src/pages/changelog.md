@@ -1,5 +1,6 @@
 ---
-name: Changelog
+title: react-sticky-box Changelog
+layout: ../layouts/MainLayout.astro
 ---
 
 # Changelog

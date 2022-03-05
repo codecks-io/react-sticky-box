@@ -1,5 +1,6 @@
 ---
-name: Api
+title: react-sticky-box api
+layout: ../layouts/MainLayout.astro
 ---
 
 # Api
@@ -30,7 +31,3 @@ import StickyBox from "react-sticky-box";
 - **`offsetBottom={number|default: 0}`**
 
   Defines the offset to the bottom of the viewport.
-
-- **`onChangeMode={(oldMode, newMode) => {}}`**
-
-  This function is called as soon as the content becomes sticky or unsticky again. The possible values for `oldMode` and `newMode` are `relative`, `stickyBottom`, `stickyTop`

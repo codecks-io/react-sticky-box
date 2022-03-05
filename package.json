@@ -1,52 +1,31 @@
 {
-  "name": "react-sticky-box",
-  "version": "0.9.3",
-  "description": "Boxes that behave nicely while scrolling",
+  "private": true,
+  "name": "react-sticky-box-workspace",
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "description": "Workspace for react-sticky-box",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --max-warnings=0 src docs *.js",
-    "is-prettier": "prettier --list-different './{src,docs}/**/*.{js,json,css}' './*.js'",
+    "lint": "eslint --max-warnings=0 packages *.js",
+    "is-prettier": "prettier --list-different 'packages/*/src/**/*.{js,json,css,jsx}' './*.js'",
     "prettier": "prettier --write",
-    "prettier:all": "prettier --write '{src,docs}/**/*.{js,json,css}' '*.js'",
+    "prettier:all": "prettier --write 'packages/*/src/**/*.{js,json,css,jsx}' '*.js'",
     "precommit": "lint-staged",
-    "prepublishOnly": "npm run lint && npm run is-prettier && npm run build",
     "prepare": "husky install"
   },
-  "keywords": [
-    "react",
-    "scroll",
-    "sticky",
-    "fixed"
-  ],
-  "author": "Daniel Berndt <daniel.berndt@gmail.com> (http://danielberndt.net/)",
-  "license": "ISC",
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.js",
-  "repository": "danielberndt/react-sticky-box",
-  "files": [
-    "dist",
-    "index.d.ts"
-  ],
   "devDependencies": {
-    "@db-scripts/eslint-config": "^0.3.0",
-    "eslint": "^7.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-react-app": "^7.0.0",
     "husky": "^7.0.0",
-    "lint-staged": "^12.1.7",
-    "prettier": "^2.5.1",
-    "react": "^17.0.2"
-  },
-  "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
-  },
-  "dependencies": {
-    "resize-observer-polyfill": "^1.5.1"
+    "lint-staged": "^12.3.5",
+    "prettier": "^2.5.1"
   },
   "lint-staged": {
-    "{src,docs}/**/*.{js,json,css,mdx} *.js": [
+    "packages/*/src/**/*.{js,json,css,mdx,jsc} *.js": [
       "npm run prettier",
       "npm run lint",
       "git add"
     ]
-  },
-  "typings": "./index.d.ts"
+  }
 }

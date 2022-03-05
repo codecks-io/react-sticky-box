@@ -2,13 +2,13 @@
   max-height: 200px;
   overflow: auto;
   background-color: #eee;
-  border-radius: 3px;
+  border-radius: 15px;
 }
 
 .bigBody {
   composes: body;
   max-height: 400px;
-  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.4) inset;
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.1) inset;
   border: 1px solid #ddd;
 }
 
@@ -28,13 +28,19 @@
   align-self: flex-end;
 }
 
-.content {
+.baseContent {
   background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.05);
   padding: 10px;
-  flex: auto;
-  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.4);
-  height: 500px;
   margin: 0 10px;
+  border-radius: 5px;
+  flex: auto;
+}
+
+.content {
+  composes: baseContent;
+  flex: auto;
+  height: 500px;
 }
 
 .flexibleHeightContent {
@@ -59,11 +65,8 @@
 }
 
 .sidebar {
-  background-color: #fff;
-  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.4);
-  padding: 10px;
+  composes: baseContent;
   min-width: 120px;
-  margin: 0 10px;
 }
 
 .fauxNavElement {
@@ -77,4 +80,40 @@
 
 .fauxNavElement:not(:last-child) {
   margin-bottom: 10px;
+}
+
+.codeBox {
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bg {
+  background-color: #eee;
+  padding: 10px;
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.1) inset;
+}
+
+.codeBoxResultSm {
+  composes: bg;
+  max-height: 100px;
+  overflow: auto;
+}
+
+.codeBoxResultMd {
+  composes: bg;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.codeBoxResultLg {
+  composes: bg;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.codeBoxCode {
+  background-color: #0d1117;
 }
