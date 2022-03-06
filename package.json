@@ -10,7 +10,8 @@
     "prettier": "prettier --write",
     "prettier:all": "prettier --write 'packages/*/src/**/*.{js,json,css,jsx}'",
     "precommit": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build:docs": "yarn workspace react-sticky-box build && yarn workspace @react-sticky-box/docs build"
   },
   "devDependencies": {
     "eslint": "^8.0.0",
