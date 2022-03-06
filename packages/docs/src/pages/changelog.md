@@ -8,7 +8,7 @@ layout: ../layouts/MainLayout.astro
 ## 1.0.0
 
 - Added `useStickyBox` hook
-- Changed peer dependency for react to `"^16.8.0 || ^17.0.0 || ^18.0.0"`
+- Changed peer dependency for react to `">=16.8.0"`
 - Removed `onChangeMode` prop
 - Removed `offset` prop. Use `offsetTop` and `offsetBottom` instead
 - This package is bundled as ESM
