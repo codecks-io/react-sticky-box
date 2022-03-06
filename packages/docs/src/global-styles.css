@@ -8,8 +8,7 @@
   margin: 0;
 }
 
-html,
-body {
+html {
   height: 100%;
 }
 
@@ -17,6 +16,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   line-height: 1.5;
+  color: #333;
+  min-height: 100%;
 }
 
 img,
@@ -26,4 +27,75 @@ canvas,
 svg {
   display: block;
   max-width: 100%;
+}
+
+code {
+  font-size: 1rem;
+}
+
+main {
+  width: 50rem;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem 4rem;
+  min-width: 0;
+}
+
+main h1,
+main h2,
+main h3,
+main h4 {
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+main h2 {
+  margin-top: 4rem;
+}
+
+main pre {
+  margin-bottom: 1rem;
+}
+main p,
+main ul,
+main ol {
+  margin-bottom: 1rem;
+}
+
+main li {
+  margin-bottom: 1rem;
+}
+
+main li p {
+  margin-bottom: 0.5rem;
+}
+
+main > *:first-child {
+  margin-top: 0;
+}
+
+main > *:last-child {
+  margin-bottom: 0;
+}
+
+.astro-code {
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+@media screen and (max-width: 30em) {
+  main {
+    padding-left: 2.5rem;
+    padding-right: 1rem;
+  }
+  .astro-code {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  code {
+    font-size: 0.8rem;
+  }
 }

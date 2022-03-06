@@ -34,7 +34,7 @@ setup: |
 
 ```jsx
 <header>Header</header>
-<div style={{display: "flex"}}>
+<div style={{display: "flex", alignItems: "flex-start"}}>
   <StickyBox offsetTop={10} offsetBottom={10}>
     <Sidebar />
   </StickyBox>
@@ -44,7 +44,7 @@ setup: |
   </StickyBox>
 </div>
 <footer>Footer</footer>
-<div style={{display: "flex"}}>
+<div style={{display: "flex", alignItems: "flex-start"}}>
   <StickyBox offsetTop={20} offsetBottom={20}>
     <Sidebar />
   </StickyBox>

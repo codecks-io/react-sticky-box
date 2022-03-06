@@ -1,0 +1,161 @@
+---
+
+---
+
+<style>
+  .outer {
+    position: sticky;
+    top: 0;
+    flex: none;
+    transform: translateX(0);
+    transition: transform .25s ease-in-out;
+    height: 100vh;
+  }
+
+  .container {
+    border-right: 1px solid #ddd;
+    padding: 1rem 2rem;
+    background-color: #fafafa;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+  }
+
+  nav {
+    margin-bottom: 1rem;
+  }
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+  ul ul {
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #ddd;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .2s;
+    font-size: 0.875rem;
+  }
+  a:hover {
+    color: #111;
+  }
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  li {
+    margin-bottom: 0.75rem;
+  }
+
+  footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem
+  }
+
+  .footer-icon {
+    height: 2rem;
+    width: auto;
+  }
+
+  .footer-link {
+    display: flex;
+    gap: 1rem;
+    align-items: center
+  }
+
+  .close-button {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 1rem;
+    background-color: #eee;
+    border: 1px solid #ddd;
+    border-radius: 0 0.25rem 0.25rem 0;
+    transition: all 0.2s;
+    padding: 0.5rem 0.25rem;
+  }
+
+  .close-button:hover {
+    background-color: #ddd;
+    border: 1px solid #ccc;
+  }
+
+  svg {
+    width: 1em;
+    height: 1em;
+    max-width: initial;
+  }
+
+  @media screen and (max-width: 45em) {
+    .outer {
+      position: fixed;
+      z-index: 1;
+      transform: translateX(-100%);
+      transform: translateX(calc(-100% + 0.5rem));
+    }
+    .outer.open {
+      transform: translateX(0);
+      height: 100%;
+    }
+    .close-button {
+      display: block;
+    }
+  }
+</style>
+
+<div class="outer" id="navcontainer">
+  <button class="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+  </button>
+  <div class="container" >
+    <h2>Overview</h2>
+    <nav>
+    <ul>
+      <li><a href="/">Start</a></li>
+      <li><a href="/api">Api</a></li>
+      <li>
+        <h3>Examples</h3>
+        <ul>
+          <li><a href="/examples/simple">Simple</a></li>
+          <li><a href="/examples/complex">Complex</a></li>
+          <li><a href="/examples/full-page">Full Page</a></li>
+          <li><a href="/examples/debug">Debug</a></li>
+        </ul>
+      </li>
+      <li><a href="/changelog">Changelog</a></li>
+    </ul>
+    </nav>
+    <footer>
+      <a class="footer-link" href="https://github.com/codecks-io/react-sticky-box">
+        <img class="footer-icon" src="/github-icon.svg" alt="Github" width="256" height="250"/>
+        <div>Code on GitHub</div>
+      </a>
+      <a class="footer-link" href="https://www.codecks.io">
+        <img class="footer-icon" src="/cdx-icon.svg" alt="Codecks" width="900" height="850"/>
+        <div>Made by Codecks</div>
+      </a>
+    </footer>
+  </div>
+</div>
+
+
+<script>
+const navNode = document.querySelector("#navcontainer");
+document.querySelector(".close-button").addEventListener("click",() => {
+  console.log("here")
+  navNode.classList.toggle("open")
+})
+</script>

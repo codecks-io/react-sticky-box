@@ -1,25 +1,38 @@
+.negativeMargin {
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+@media screen and (max-width: 30em) {
+  .negativeMargin {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+}
+
 .body {
+  composes: negativeMargin;
   max-height: 200px;
   overflow: auto;
   background-color: #eee;
-  border-radius: 15px;
+  border-radius: 1rem;
 }
 
 .bigBody {
   composes: body;
   max-height: 400px;
-  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 0 1rem -5px rgba(0, 0, 0, 0.1) inset;
   border: 1px solid #ddd;
 }
 
 .row {
-  padding: 20px;
+  padding: 1rem;
   display: flex;
   align-items: flex-start;
 }
 
 .rowAlignEnd {
-  padding: 20px;
+  padding: 1rem;
   display: flex;
   align-items: flex-end;
 }
@@ -30,9 +43,9 @@
 
 .baseContent {
   background-color: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.05);
-  padding: 10px;
-  margin: 0 10px;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  margin: 0 1rem;
   border-radius: 5px;
   flex: auto;
 }
@@ -40,7 +53,7 @@
 .content {
   composes: baseContent;
   flex: auto;
-  height: 500px;
+  height: 20rem;
 }
 
 .flexibleHeightContent {
@@ -50,23 +63,23 @@
 
 .smallContent {
   composes: content;
-  height: 100px;
+  height: 8rem;
 }
 
 .miniContent {
   composes: content;
-  height: 40px;
+  height: 4rem;
 }
 
 .largeContent {
   composes: content;
-  min-height: 700px;
+  min-height: 40rem;
   height: 120vh;
 }
 
 .sidebar {
   composes: baseContent;
-  min-width: 120px;
+  min-width: 8rem;
 }
 
 .fauxNavElement {
@@ -75,16 +88,17 @@
 }
 
 .fauxNav {
-  margin: 20px 0;
+  margin: 1rem 0;
 }
 
 .fauxNavElement:not(:last-child) {
-  margin-bottom: 10px;
+  margin-bottom: 0.75rem;
 }
 
 .codeBox {
+  composes: negativeMargin;
   border: 1px solid #ddd;
-  border-radius: 15px;
+  border-radius: 1rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -92,28 +106,32 @@
 
 .bg {
   background-color: #eee;
-  padding: 10px;
-  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.1) inset;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 0 1rem -5px rgba(0, 0, 0, 0.1) inset;
 }
 
 .codeBoxResultSm {
   composes: bg;
-  max-height: 100px;
+  max-height: 6rem;
   overflow: auto;
 }
 
 .codeBoxResultMd {
   composes: bg;
-  max-height: 200px;
+  max-height: 15rem;
   overflow: auto;
 }
 
 .codeBoxResultLg {
   composes: bg;
-  max-height: 400px;
+  max-height: 30rem;
   overflow: auto;
 }
 
 .codeBoxCode {
   background-color: #0d1117;
+}
+
+.codeBoxCode :global(.astro-code) {
+  margin: 0;
 }
