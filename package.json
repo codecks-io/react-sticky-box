@@ -1,16 +1,14 @@
 {
   "private": true,
-  "name": "react-sticky-box-workspace",
-  "version": "0.0.0",
   "workspaces": [
     "packages/*"
   ],
   "description": "Workspace for react-sticky-box",
   "scripts": {
-    "lint": "eslint --max-warnings=0 packages *.js",
-    "is-prettier": "prettier --list-different 'packages/*/src/**/*.{js,json,css,jsx}' './*.js'",
+    "lint": "eslint --max-warnings=0 'packages/*/src/**/*.{js,jsx}'",
+    "is-prettier": "prettier --list-different 'packages/*/src/**/*.{js,json,css,jsx}'",
     "prettier": "prettier --write",
-    "prettier:all": "prettier --write 'packages/*/src/**/*.{js,json,css,jsx}' '*.js'",
+    "prettier:all": "prettier --write 'packages/*/src/**/*.{js,json,css,jsx}'",
     "precommit": "lint-staged",
     "prepare": "husky install"
   },

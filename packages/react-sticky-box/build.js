@@ -1,34 +1,29 @@
-const {build} = require("esbuild");
-const {dependencies, peerDependencies} = require("./package.json");
+import {build} from "esbuild";
+
+// based on https://github.com/evanw/esbuild/issues/619#issuecomment-751995294
+const makeAllPackagesExternalPlugin = {
+  name: "make-all-packages-external",
+  setup(build) {
+    const filter = /^[^./]|^\.[^./]|^\.\.[^/]/; // Must not start with "/" or "./" or "../"
+    build.onResolve({filter}, (args) => ({path: args.path, external: true}));
+  },
+};
 
 const shared = {
-  entryPoints: ["src/index.js"],
+  plugins: [makeAllPackagesExternalPlugin],
+  entryPoints: ["src/index.jsx"],
   bundle: true,
-  external: Object.keys(dependencies).concat(Object.keys(peerDependencies)),
   loader: {".js": "jsx"},
+  format: "esm",
 };
 
 build({
   ...shared,
   outfile: "dist/index.js",
-  format: "cjs",
 });
 
 build({
   ...shared,
   outfile: "dist/index.min.js",
-  minify: true,
-});
-
-build({
-  ...shared,
-  outfile: "dist/index.esm.js",
-  format: "esm",
-});
-
-build({
-  ...shared,
-  outfile: "dist/index.esm.min.js",
-  format: "esm",
   minify: true,
 });
