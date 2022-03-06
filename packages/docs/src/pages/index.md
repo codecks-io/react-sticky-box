@@ -117,7 +117,7 @@ Make sure that the `<StickyBox>` is only as high as its content, and not as high
 
 <CodeSample size="sm">
 
-<div style="display: flex; align-items: flex-start;" slot="result">
+<div style="display: flex; align-items: flex-start; padding: 1.5rem 2rem" slot="result">
   <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle/>
   <div style="height: 150px; border: 3px solid blue;">Main Content</div>
 </div>
@@ -137,7 +137,7 @@ This time without `alignItems: "flex-start"`
 
 <CodeSample size="sm">
 
-<div style="display: flex;" slot="result">
+<div style="display: flex;padding: 1.5rem 2rem" slot="result">
   <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle/>
   <div style="height: 150px; border: 3px solid blue;">Main Content</div>
 </div>
