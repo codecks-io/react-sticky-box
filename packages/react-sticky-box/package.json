@@ -3,7 +3,10 @@
   "version": "0.9.3",
   "description": "Boxes that behave nicely while scrolling",
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "lint": "eslint --max-warnings=0 'src/**/*.{js,jsx}'",
+    "is-prettier": "prettier --list-different 'src/**/*.{js,jsx}'",
+    "prepublishOnly": "npm run lint && npm run is-prettier && npm run build"
   },
   "keywords": [
     "react",
@@ -15,7 +18,7 @@
   "license": "ISC",
   "repository": "codecks-io/react-sticky-box",
   "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    "react": ">=16.8.0"
   },
   "dependencies": {
     "resize-observer-polyfill": "^1.5.1"
