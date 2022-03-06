@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-box",
-  "version": "0.9.3",
+  "version": "1.0.0",
   "description": "Boxes that behave nicely while scrolling",
   "scripts": {
     "build": "node build.js",
