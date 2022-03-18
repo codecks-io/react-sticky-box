@@ -12,7 +12,15 @@ type StickyBoxCompProps = UseStickyBoxOptions & {
   children: React.ReactNode;
 };
 
-type useStickyBox = <T = any>(options?: UseStickyBoxOptions) => React.RefCallback<T>;
-type StickyBoxComp = React.FunctionComponent<StickyBoxCompProps>;
+declare function useStickyBox<T = any>(
+  options?: UseStickyBoxOptions
+): React.RefCallback<T>;
 
-export {StickyBoxComp as default, useStickyBox, StickyBoxCompProps, UseStickyBoxOptions};
+declare function StickyBoxComp(props: StickyBoxCompProps): JSX.Element;
+
+export {
+  StickyBoxComp as default,
+  useStickyBox,
+  StickyBoxCompProps,
+  UseStickyBoxOptions,
+};
