@@ -7,16 +7,41 @@
 
 Sticky Boxes with sensible behaviour if the content is bigger than the viewport.
 
-## Check out the docs to see it in action
+## Use as a Component
 
-\>\> **[react-sticky-box.codecks.io](https://react-sticky-box.codecks.io/)** <<
+```jsx
+import StickyBox from "react-sticky-box";
 
-## Installation
+const Page = () => (
+  <div className="row">
+    <StickyBox offsetTop={20} offsetBottom={20}>
+      <div>Sidebar</div>
+    </StickyBox>
+    <div>Content</div>
+  </div>
+);
+```
 
-`npm install react-sticky-box`
+## Or via the `useStickyBox` hook
+
+```jsx
+import {useStickyBox} from "react-sticky-box";
+
+const Page = () => {
+  const stickyRef = useStickyBox({offsetTop: 20, offsetBottom: 20})
+  <div className="row">
+    <aside ref={stickyRef}>
+      <div>Sidebar</div>
+    </aside>
+    <div>Content</div>
+  </div>
+};
+```
+
+## Check out the docs for more deatils and live demos
+
+**[react-sticky-box.codecks.io](https://react-sticky-box.codecks.io/)**
 
 ---
 
 [Changelog](https://react-sticky-box.codecks.io/changelog)
-
-

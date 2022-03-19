@@ -6,7 +6,7 @@
     "build": "node build.js",
     "lint": "eslint --max-warnings=0 'src/**/*.{js,jsx}'",
     "is-prettier": "prettier --list-different 'src/**/*.{js,jsx}'",
-    "prepublishOnly": "npm run lint && npm run is-prettier && npm run build"
+    "prepublishOnly": "npm run lint && npm run is-prettier && npm run build && cp ../../README.md ."
   },
   "keywords": [
     "react",
@@ -31,6 +31,7 @@
   "typings": "./index.d.ts",
   "files": [
     "dist",
-    "index.d.ts"
+    "index.d.ts",
+    "README.md"
   ]
 }
