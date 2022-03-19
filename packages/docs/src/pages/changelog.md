@@ -5,6 +5,10 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 1.0.1
+
+- Fixed TypeScript definitions
+
 ## 1.0.0
 
 - Added `useStickyBox` hook
