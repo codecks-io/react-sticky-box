@@ -27,6 +27,7 @@
     "esbuild": "^0.14.25"
   },
   "type": "module",
+  "main": "./dist/index.js",
   "exports": "./dist/index.js",
   "typings": "./index.d.ts",
   "files": [
