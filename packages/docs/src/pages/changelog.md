@@ -5,6 +5,10 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 1.0.2
+
+- Added `main` entry point to this library's `package.json` to improve compatibility with older bundlers
+
 ## 1.0.1
 
 - Fixed TypeScript definitions
