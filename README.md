@@ -7,7 +7,13 @@
 
 Sticky Boxes with sensible behaviour if the content is bigger than the viewport.
 
-## Use as a Component
+## Documentation & Demo
+
+**[react-sticky-box.codecks.io](https://react-sticky-box.codecks.io/)**
+
+## Quick Start
+
+### Use as a Component
 
 ```jsx
 import StickyBox from "react-sticky-box";
@@ -22,7 +28,7 @@ const Page = () => (
 );
 ```
 
-## Or via the `useStickyBox` hook
+### Or via the `useStickyBox` hook
 
 ```jsx
 import {useStickyBox} from "react-sticky-box";
@@ -37,11 +43,6 @@ const Page = () => {
   </div>
 };
 ```
-
-## Check out the docs for more deatils and live demos
-
-**[react-sticky-box.codecks.io](https://react-sticky-box.codecks.io/)**
-
 ---
 
 [Changelog](https://react-sticky-box.codecks.io/changelog)
