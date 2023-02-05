@@ -5,6 +5,14 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 2.0.0
+
+Major internal rewrite. API has stayed identical though.
+
+- **Breaking:** [`resize-observer-polyfill`](https://www.npmjs.com/package/resize-observer-polyfill) is no longer included as by now [`ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver) is widely supported.
+- Changing props will now re-calculate the state of the `StickyBox`
+- Code base now using typescript
+
 ## 1.0.2
 
 - Added `main` entry point to this library's `package.json` to improve compatibility with older bundlers
