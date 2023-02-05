@@ -46,3 +46,11 @@ const Page = () => {
 ---
 
 [Changelog](https://react-sticky-box.codecks.io/changelog)
+
+## Contribute
+
+- checkout the repo
+- `cd /path/to/repo/packages/docs`
+- `yarn install && yarn start`
+
+this will allow you to modify the react-sticky-box sources in `packages/react-sticky-box/src` and check the effects in the docs.
