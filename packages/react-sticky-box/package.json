@@ -3,9 +3,9 @@
   "version": "1.0.2",
   "description": "Boxes that behave nicely while scrolling",
   "scripts": {
-    "build": "node build.js",
-    "lint": "eslint --max-warnings=0 'src/**/*.{js,jsx}'",
-    "is-prettier": "prettier --list-different 'src/**/*.{js,jsx}'",
+    "build": "node build.js && tsc --emitDeclarationOnly",
+    "lint": "eslint --max-warnings=0 'src/**/*.{js,jsx,ts,tsx}'",
+    "is-prettier": "prettier --list-different 'src/**/*.{js,jsx,ts,tsx}'",
     "prepublishOnly": "npm run lint && npm run is-prettier && npm run build && cp ../../README.md ."
   },
   "keywords": [
@@ -20,19 +20,18 @@
   "peerDependencies": {
     "react": ">=16.8.0"
   },
-  "dependencies": {
-    "resize-observer-polyfill": "^1.5.1"
-  },
   "devDependencies": {
-    "esbuild": "^0.14.25"
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "esbuild": "^0.14.25",
+    "typescript": "^4.9.5"
   },
   "type": "module",
   "main": "./dist/index.js",
   "exports": "./dist/index.js",
-  "typings": "./index.d.ts",
+  "typings": "./dist/index.d.ts",
   "files": [
     "dist",
-    "index.d.ts",
     "README.md"
   ]
 }

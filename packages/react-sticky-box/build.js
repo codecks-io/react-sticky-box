@@ -11,9 +11,8 @@ const makeAllPackagesExternalPlugin = {
 
 const shared = {
   plugins: [makeAllPackagesExternalPlugin],
-  entryPoints: ["src/index.jsx"],
+  entryPoints: ["src/index.tsx"],
   bundle: true,
-  loader: {".js": "jsx"},
   format: "esm",
 };
 

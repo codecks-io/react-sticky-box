@@ -13,7 +13,7 @@ const config = {
   vite: {
     resolve: {
       alias: {
-        "react-sticky-box": resolve(__dirname, "../react-sticky-box/src/index.jsx"),
+        "react-sticky-box": resolve(__dirname, "../react-sticky-box/src/index.tsx"),
       },
     },
   },

@@ -5,10 +5,10 @@
   ],
   "description": "Workspace for react-sticky-box",
   "scripts": {
-    "lint": "eslint --max-warnings=0 'packages/*/src/**/*.{js,jsx}'",
-    "is-prettier": "prettier --list-different 'packages/*/src/**/*.{js,json,css,jsx}'",
+    "lint": "eslint --max-warnings=0 'packages/*/src/**/*.{js,jsx,ts,tsx}'",
+    "is-prettier": "prettier --list-different 'packages/*/src/**/*.{js,json,css,jsx,ts,tsx,md,mdx}'",
     "prettier": "prettier --write",
-    "prettier:all": "prettier --write 'packages/*/src/**/*.{js,json,css,jsx}'",
+    "prettier:all": "prettier --write 'packages/*/src/**/*.{js,json,css,jsx,ts,tsx,md,mdx}'",
     "precommit": "lint-staged",
     "prepare": "husky install",
     "build:docs": "yarn workspace react-sticky-box build && yarn workspace @react-sticky-box/docs build"
@@ -21,7 +21,7 @@
     "prettier": "^2.5.1"
   },
   "lint-staged": {
-    "packages/*/src/**/*.{js,json,css,mdx,jsc} *.js": [
+    "packages/*/src/**/*.{js,json,css,mdx,jsx,ts,tsx,md,mdx} *.js": [
       "npm run prettier",
       "npm run lint",
       "git add"
