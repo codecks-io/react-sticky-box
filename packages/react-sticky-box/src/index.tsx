@@ -139,7 +139,7 @@ const enum MODES {
   small,
 }
 
-type StickyMode = null | typeof MODES[keyof typeof MODES];
+type StickyMode = null | (typeof MODES)[keyof typeof MODES];
 
 const setup = (node: HTMLElement, unsubs: UnsubList, opts: Required<StickyBoxConfig>) => {
   const {bottom, offsetBottom, offsetTop} = opts;
