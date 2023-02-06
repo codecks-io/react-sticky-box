@@ -1,33 +1,33 @@
 ---
 title: react-sticky-box documentation
 layout: ../layouts/MainLayout.astro
-setup: |
-  import {Body, Row, Content} from '../components/ui.jsx'
-  import {StickySidebar, StickyWord} from '../components/Sidebar.jsx'
-  import CodeSample from '../components/CodeSample.astro'
 ---
+
+import {Body, Row, ContentBox} from "../components/ui.jsx";
+import {StickySidebar, StickyWord} from "../components/Sidebar.jsx";
+import CodeSample from "../components/CodeSample.astro";
 
 # React Sticky Box
 
 ## See it in Action
 
 <Body big>
-	<Row>
-		<Content size="xs" />
-	</Row>
-	<Row>
-		<StickySidebar offsetTop={20} offsetBottom={20} elements={20} client:idle />
-		<Content size="lg">
-			<p>The sidebar to the left stays in a sticky position.</p>
-			<p>
-				Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes
-				greater than the viewport.
-			</p>
-		</Content>
-	</Row>
-	<Row>
-		<Content size="md" />
-	</Row>
+  <Row>
+    <ContentBox size="xs" />
+  </Row>
+  <Row>
+    <StickySidebar offsetTop={20} offsetBottom={20} elements={20} client:idle />
+    <ContentBox size="lg">
+      <p>The sidebar to the left stays in a sticky position.</p>
+      <p>
+        Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes
+        greater than the viewport.
+      </p>
+    </ContentBox>
+  </Row>
+  <Row>
+    <ContentBox size="md" />
+  </Row>
 </Body>
 
 ## What the Code looks like
@@ -118,7 +118,7 @@ Make sure that the `<StickyBox>` is only as high as its content, and not as high
 <CodeSample size="sm">
 
 <div style="display: flex; align-items: flex-start; padding: 1.5rem 2rem" slot="result">
-  <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle/>
+  <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle />
   <div style="height: 150px; border: 3px solid blue;">Main Content</div>
 </div>
 
@@ -138,7 +138,7 @@ This time without `alignItems: "flex-start"`
 <CodeSample size="sm">
 
 <div style="display: flex;padding: 1.5rem 2rem" slot="result">
-  <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle/>
+  <StickyWord style={{border: "3px solid green"}} word="Sidebar" client:idle />
   <div style="height: 150px; border: 3px solid blue;">Main Content</div>
 </div>
 

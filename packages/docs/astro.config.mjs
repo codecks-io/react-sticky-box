@@ -1,14 +1,18 @@
 // @ts-check
 /** @type {import('astro').AstroUserConfig} */
 
+import {defineConfig} from "astro/config";
+import react from "@astrojs/react";
+import mdx from "@astrojs/mdx";
+
 import {resolve, dirname} from "path";
 import {fileURLToPath} from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const config = {
-  renderers: ["@astrojs/renderer-react"],
+export default defineConfig({
+  integrations: [react(), mdx()],
 
   vite: {
     resolve: {
@@ -18,18 +22,11 @@ const config = {
     },
   },
 
-  markdownOptions: {
-    render: [
-      "@astrojs/markdown-remark",
-      {
-        syntaxHighlight: "shiki",
-        shikiConfig: {
-          theme: "github-dark",
-          langs: ["jsx", "bash"],
-          wrap: false,
-        },
-      },
-    ],
+  markdown: {
+    syntaxHighlight: "shiki",
+    shikiConfig: {
+      theme: "github-dark",
+      wrap: false,
+    },
   },
-};
-export default config;
+});

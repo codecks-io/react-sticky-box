@@ -1,34 +1,34 @@
 ---
 title: react-sticky-box Complex Example
 layout: ../../layouts/MainLayout.astro
-setup: |
-  import {Body, Row, Content} from '../../components/ui.jsx'
-  import {StickySidebar, BottomStickySidebar} from '../../components/Sidebar.jsx'
-  import CodeSample from '../../components/CodeSample.astro'
 ---
+
+import {Body, Row, ContentBox} from '../../components/ui.jsx'
+import {StickySidebar, BottomStickySidebar} from '../../components/Sidebar.jsx'
+import CodeSample from '../../components/CodeSample.astro'
 
 # Complex Example
 
 <CodeSample size="lg">
 <div slot="result">
   <Row>
-		<Content size="xs">Header</Content>
+		<ContentBox size="xs">Header</ContentBox>
 	</Row>
   <Row>
     <StickySidebar elements={20} offsetTop={20} offsetBottom={20} client:idle />
-    <Content size="lg">
+    <ContentBox size="lg">
       <p>Content</p>
-    </Content>
+    </ContentBox>
     <BottomStickySidebar elements={20} offsetTop={20} offsetBottom={20} style={{alignSelf: "flex-end"}} client:idle/>
   </Row>
   <Row>
-		<Content size="xs">Footer</Content>
+		<ContentBox size="xs">Footer</ContentBox>
 	</Row>
   <Row>
     <StickySidebar elements={17} offsetTop={20} offsetBottom={20} client:idle />
-    <Content size="md">
+    <ContentBox size="md">
       <p>Content</p>
-    </Content>
+    </ContentBox>
   </Row>
 </div>
 

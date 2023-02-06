@@ -1,11 +1,11 @@
 ---
 title: react-sticky-box Simple Example
 layout: ../../layouts/MainLayout.astro
-setup: |
-  import {Body, Row, Content} from '../../components/ui.jsx'
-  import {StickySidebar, BottomStickySidebar} from '../../components/Sidebar.jsx'
-  import CodeSample from '../../components/CodeSample.astro'
 ---
+
+import {Body, Row, ContentBox} from '../../components/ui.jsx'
+import {StickySidebar, BottomStickySidebar} from '../../components/Sidebar.jsx'
+import CodeSample from '../../components/CodeSample.astro'
 
 # Simple Example
 
@@ -15,13 +15,13 @@ setup: |
 
 <Row slot="result">
   <StickySidebar elements={10} offsetTop={20} offsetBottom={20} client:idle />
-  <Content size="lg">
+  <ContentBox size="lg">
     <p>Main Content.</p>
     <p>
       Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes
       greater than the viewport.
     </p>
-  </Content>
+  </ContentBox>
 </Row>
 
 ```jsx
@@ -43,13 +43,13 @@ Note the `align-items: flex-end` which forces the Sidebar to be aligned towards 
 
 <Row slot="result" alignItems="end">
   <BottomStickySidebar elements={10} offsetTop={20} offsetBottom={20} client:idle />
-  <Content size="lg">
+  <ContentBox size="lg">
     <p>Main Content.</p>
     <p>
       Go ahead and hit the <b>expand</b> button to see how it behaves once the sidebar becomes
       greater than the viewport.
     </p>
-  </Content>
+  </ContentBox>
 </Row>
 
 ```jsx
