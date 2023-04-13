@@ -5,6 +5,10 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 2.0.2
+
+- Fixed build issue by ensuring `react/jsx-runtime` gets imported as `react/jsx-runtime.js`
+
 ## 2.0.1
 
 - Added support for `overflow: overlay` property
