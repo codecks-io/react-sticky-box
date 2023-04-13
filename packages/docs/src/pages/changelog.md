@@ -5,6 +5,10 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 2.0.1
+
+- Added support for `overflow: overlay` property
+
 ## 2.0.0
 
 Major internal rewrite. API has stayed identical though.
