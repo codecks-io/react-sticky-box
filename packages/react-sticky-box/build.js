@@ -5,7 +5,13 @@ const makeAllPackagesExternalPlugin = {
   name: "make-all-packages-external",
   setup(build) {
     const filter = /^[^./]|^\.[^./]|^\.\.[^/]/; // Must not start with "/" or "./" or "../"
-    build.onResolve({filter}, (args) => ({path: args.path, external: true}));
+
+    // to resolve webpack issues: https://github.com/codecks-io/react-sticky-box/issues/87
+    const addDotJs = new Set(["react/jsx-runtime"]);
+    build.onResolve({filter}, (args) => ({
+      path: addDotJs.has(args.path) ? `${args.path}.js` : args.path,
+      external: true,
+    }));
   },
 };
 
