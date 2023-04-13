@@ -26,5 +26,6 @@
       "npm run lint",
       "git add"
     ]
-  }
+  },
+  "version": "0.0.1"
 }
