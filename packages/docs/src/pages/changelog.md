@@ -5,6 +5,10 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 2.0.4
+
+- Fix unsubscribing from event listener.
+
 ## 2.0.3
 
 - Rollback of 2.0.2 as it causes issues with other build systems.
