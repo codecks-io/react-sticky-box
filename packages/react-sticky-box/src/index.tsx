@@ -111,7 +111,7 @@ const getDimensions = <T extends object>(opts: {
       onChange();
     };
     window.addEventListener("resize", handler, passiveArg);
-    unsubs.push(() => window.addEventListener("resize", handler, passiveArg));
+    unsubs.push(() => window.removeEventListener("resize", handler));
     return mResult;
   } else {
     const mResult = measure((el as HTMLElement).getBoundingClientRect());
