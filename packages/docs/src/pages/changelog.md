@@ -5,6 +5,10 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 2.0.3
+
+- Rollback of 2.0.2 as it causes issues with other build systems.
+
 ## 2.0.2
 
 - Fixed build issue by ensuring `react/jsx-runtime` gets imported as `react/jsx-runtime.js`
