@@ -285,7 +285,7 @@ const setup = (node: HTMLElement, unsubs: UnsubList, opts: Required<StickyBoxCon
   changeMode(mode);
 
   const onScroll = (scrollY: number) => {
-    if (scrollY === latestScrollY) return;
+    if (scrollY === latestScrollY || document.body.style.position === "fixed") return;
     const scrollDelta = scrollY - latestScrollY;
     latestScrollY = scrollY;
     if (mode === MODES.small) return;
