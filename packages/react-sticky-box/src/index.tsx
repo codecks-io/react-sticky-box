@@ -152,7 +152,31 @@ const setup = (node: HTMLElement, unsubs: UnsubList, opts: Required<StickyBoxCon
     if (!isScheduled) {
       requestAnimationFrame(() => {
         const nextMode = onLayout();
-        if (nextMode !== mode) changeMode(nextMode);
+        if (nextMode !== mode) {
+          changeMode(nextMode);
+        } else if (nextMode === MODES.stickyBottom && !bottom) {
+          // ensure it still is at bottom
+          const {height: viewPortHeight} = scrollPaneDims;
+          const {height: nodeHeight} = nodeDims;
+          node.style.top = `${viewPortHeight - nodeHeight - offsetBottom}px`;
+        } else if (nextMode === MODES.relative) {
+          const {height: viewPortHeight, offsetTop: scrollPaneOffset} = scrollPaneDims;
+          const {height: parentHeight, naturalTop} = parentDims;
+          const {height: nodeHeight} = nodeDims;
+          const relativeOffset = Math.max(
+            0,
+            scrollPaneOffset +
+              latestScrollY +
+              viewPortHeight -
+              (naturalTop + nodeHeight + offsetBottom)
+          );
+          if (bottom) {
+            const nextBottom = Math.max(0, parentHeight - nodeHeight - relativeOffset);
+            node.style.bottom = `${nextBottom}px`;
+          } else {
+            node.style.top = `${relativeOffset}px`;
+          }
+        }
         isScheduled = false;
       });
     }

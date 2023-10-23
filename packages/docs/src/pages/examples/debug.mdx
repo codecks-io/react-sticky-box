@@ -10,6 +10,26 @@ import {StickySidebar, CollapseContent} from "../../components/Sidebar.jsx";
 
 This sections serves to describe edge cases and making it easier to manually test them.
 
+## Recalculate layout when sticky mode doesnt change, but size of sticky box does
+
+To reproduce:
+
+- Scroll a bit until box becomes sticky
+- Expand the Sidebar
+- The bottom part was not visible
+
+**Fixed in v2.05**
+
+<Body big>
+  <Row>
+    <ContentBox size="xs" />
+  </Row>
+  <Row>
+    <StickySidebar offsetTop={20} offsetBottom={20} elements={5} preElements={15} client:idle />
+    <CollapseContent size="lg" elements={100} client:idle />
+  </Row>
+</Body>
+
 ## Decrease Height of Scroll Container when scrolled down
 
 To reproduce:
@@ -18,7 +38,7 @@ To reproduce:
 - Expand the Sidebar
 - Collapse the Content Area
 
-**fixed in v0.7.7**
+**Fixed in v0.7.7**
 
 <Body big>
   <Row>
