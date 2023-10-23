@@ -3,6 +3,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "resolutions": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
   "description": "Workspace for react-sticky-box",
   "scripts": {
     "lint": "eslint --max-warnings=0 'packages/*/src/**/*.{js,jsx,ts,tsx}'",
