@@ -5,6 +5,10 @@ layout: ../layouts/MainLayout.astro
 
 # Changelog
 
+## 2.0.5
+
+- Fixed layout issue when Sticky Box changed height.
+
 ## 2.0.4
 
 - Fix unsubscribing from event listener.
