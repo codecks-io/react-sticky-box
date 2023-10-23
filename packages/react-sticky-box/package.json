@@ -21,10 +21,10 @@
     "react": ">=16.8.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "esbuild": "^0.17.16",
-    "typescript": "^4.9.5"
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "esbuild": "^0.19.5",
+    "typescript": "^5.2.2"
   },
   "type": "module",
   "main": "./dist/index.js",

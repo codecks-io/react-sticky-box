@@ -9,15 +9,15 @@
     "preview": "astro preview"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^0.16.0",
-    "@astrojs/react": "^2.0.2",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "astro": "^2.0.6",
-    "eslint": "^8.33.0",
+    "@astrojs/mdx": "^1.1.2",
+    "@astrojs/react": "^3.0.3",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "astro": "^3.3.3",
+    "eslint": "^8.52.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.1.0",
-    "prettier": "^2.8.3",
+    "lint-staged": "^15.0.2",
+    "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
