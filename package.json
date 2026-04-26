@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name":"react-sticky-box",
   "workspaces": [
     "packages/*"
   ],

@@ -1,4 +1,4 @@
-import {ComponentProps, useEffect, useState} from "react";
+import React, {ComponentProps, useEffect, useState} from "react";
 
 const getScrollParent = (node: HTMLElement) => {
   let parent: HTMLElement | null = node;
@@ -409,11 +409,7 @@ const StickyBox = (props: StickyBoxCompProps) => {
   const {offsetTop, offsetBottom, bottom, children, className, style} = props;
   const ref = useStickyBox({offsetTop, offsetBottom, bottom});
 
-  return (
-    <div className={className} style={style} ref={ref}>
-      {children}
-    </div>
-  );
+  return React.createElement('div',{className, style, ref, children})
 };
 
 export default StickyBox;
